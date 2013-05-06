@@ -17,6 +17,8 @@ Created on Sun Apr 21 10:08:18 2013
 @author: Will
 """
 
+from math import pi
+from acmconstants import C
 from collections import namedtuple
 
 namedtuple('ImagingBeam',['wavelength','intensity','linewidth', 'angle', 'focus','waist'])
@@ -36,7 +38,15 @@ class ImagingBeam:
         self.focus = focus
         self.waist = waist
         
-        #derive: intensity, frequency, omega
+
+        self.intensity = 2* self.power / (pi * waist**2)
+        self.frequency = C / (wavelength * 1e-9)
+        self.omega = 2 * pi * self.frequency
+    def image_atoms(self, atom_cloud):
+        ''' produce an AtomImage from an AtomCloud '''
+        pass
+    
+
 
 class CurrentSlab: pass
 
@@ -64,9 +74,18 @@ class AtomImage:
         self.cell_size = cell_size
         self.imaging_beam = imaging_beam
     
-class DigitalImage: pass
+class DigitalImage:
+    def __init__(self, image_array, CCD):
+        pass
     
-class CCD: pass
+class CCD:
+    def __init__(self, resolution, nbits):
+        self.resolution = resolution
+        self.nbits = nbits
+        
+    def image(self, atom_image):
+        ''' produce a DigitalImage from an AtomImage '''
+        pass
     
 class ImagingSystem: pass
 
