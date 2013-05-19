@@ -15,7 +15,7 @@ random.seed()
 PIXELSIZE = 10e-6 #m
 IMAGERES = 1e-7 #m
 PTSPERPIX = int(PIXELSIZE/IMAGERES)
-CCDSIZE = 1064 #pixels
+CCDSIZE = 1024 #pixels
 
 def CCDbin(signal):
     digital_image = []

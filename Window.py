@@ -10,7 +10,7 @@ import numpy as np
 
 wmin = -50 #um
 wmax = 50 #um
-wnum = 100
+wnum = 2048
 
 wmin = wmin * 1e-6 #m
 wmax = wmax * 1e-6 #m

@@ -22,13 +22,13 @@ def atom_light_interaction(imaging_beam, atom_density):
     need to account for polarization!!'''
     #Isat = (pi*h*c)/(3*img_lambda**2*tau) #on resonance value
     A21 = (G1*4*ALPHA*((imaging_beam.omega)**3)*(D12**2)) / (G2*3*C**2)
-    print 'A21:'
-    print A21
+#    print 'A21:'
+#    print A21
     
 #    abs_x_section = (2*pi**2*C**2*A21*gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES))
     abs_x_section = (3 * pi**2 * C**2 * A21 * gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)) / (OMEGA_RES**2)
-    print 'lineshape factor:'
-    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
+#    print 'lineshape factor:'
+#    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
     print 'x_section:'
     print abs_x_section
     
@@ -51,8 +51,8 @@ def atom_light_interaction(imaging_beam, atom_density):
 #    plt.plot(window.window, I_0)
 #    plt.title('I_0')
 #    plt.show()
-#    print 'OD:'
-#    print optical_density
+    print 'OD:'
+    print optical_density
 #    plt.plot(window.window, optical_density)
 #    plt.title('OD')
 #    plt.show()
