@@ -8,7 +8,7 @@ import DigitalImage
 import numpy as np
 
 class CCD:
-    def __init__(self, imaging_file):
+    def __init__(self):
         pass
 #        self.resolution = resolution
 #        self.nbits = nbits

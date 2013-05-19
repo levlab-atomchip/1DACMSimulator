@@ -17,11 +17,14 @@ MU_0 = 4*pi*1e-7
 
 
 ## Imaging Transition Properties
-#G1
-#D12
-#G2
-#OMEGA_RES
-#LINEWIDTH_RES
+#THESE ARE WRONG!!!
+G1 = 1
+D12 = 1.73135e-29 #C*m
+G2 = 1
+OMEGA_RES = 2*pi*384.230e12 #Hz
+LINEWIDTH_RES = 2*pi*6.0666e6 #Hz
+WAVELENGTH_RES = 780e-9 #m
+ISAT = 16.0 #W/m^2
 
 # Rb87 Properties
 A = 5.2e-9 #m, scattering length

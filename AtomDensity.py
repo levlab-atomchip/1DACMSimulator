@@ -13,3 +13,5 @@ class AtomDensity:
         self.density = density_array
         assert(len(self.density) == window.num_cells)
         self.temperature = temperature
+    def get_density(self):
+        return self.density
