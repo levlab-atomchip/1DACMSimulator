@@ -14,7 +14,7 @@ from Window import window
 import matplotlib.pyplot as plt
 
 def gH(omega, omega_resonance, linewidth):
-    return linewidth/(2*pi*((omega - omega_resonance)**2 + 0.25*linewidth**2))
+    return (linewidth / (2*pi*((omega - omega_resonance)**2 + 0.25*linewidth**2)))
     
 def atom_light_interaction(imaging_beam, atom_density):
     '''notation taken from "Atomic Physics" by Christopher Foot
@@ -25,7 +25,10 @@ def atom_light_interaction(imaging_beam, atom_density):
     print 'A21:'
     print A21
     
-    abs_x_section = (2*pi**2*C**2*A21*gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES))
+#    abs_x_section = (2*pi**2*C**2*A21*gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES))
+    abs_x_section = (3 * pi**2 * C**2 * A21 * gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)) / (OMEGA_RES**2)
+    print 'lineshape factor:'
+    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
     print 'x_section:'
     print abs_x_section
     
@@ -35,28 +38,28 @@ def atom_light_interaction(imaging_beam, atom_density):
     
 #    abs_x_section_eff = abs_x_section/(1 + imaging_beam.intensity/I_sat) #actually varies in space
     abs_x_section_eff = np.array([abs_x_section/(1 + I/I_sat) for I in I_0])
-    print 'x_section:'
-    print abs_x_section_eff
-    plt.plot(window.window, abs_x_section_eff)
-    plt.title('abs_x_section_eff')
-    plt.show()
+#    print 'x_section:'
+#    print abs_x_section_eff
+#    plt.plot(window.window, abs_x_section_eff)
+#    plt.title('abs_x_section_eff')
+#    plt.show()
     #now exponentiate and multiply this by atom_density and imaging_beam to make a new image
-    optical_density = abs_x_section_eff * atom_density.get_density()
-    I_f = I_0 * np.exp(-1*optical_density*CLOUD_THICKNESS)
-    print 'I_0:'
-    print I_0
-    plt.plot(window.window, I_0)
-    plt.title('I_0')
-    plt.show()
-    print 'OD:'
-    print optical_density
-    plt.plot(window.window, optical_density)
-    plt.title('OD')
-    plt.show()
-    print 'I_f:'
-    print I_f
-    plt.plot(window.window, I_f)
-    plt.title('I_f')
-    plt.show()
+    optical_density = abs_x_section_eff * atom_density.get_density()*CLOUD_THICKNESS
+    I_f = I_0 * np.exp(-1*optical_density)
+#    print 'I_0:'
+#    print I_0
+#    plt.plot(window.window, I_0)
+#    plt.title('I_0')
+#    plt.show()
+#    print 'OD:'
+#    print optical_density
+#    plt.plot(window.window, optical_density)
+#    plt.title('OD')
+#    plt.show()
+#    print 'I_f:'
+#    print I_f
+#    plt.plot(window.window, I_f)
+#    plt.title('I_f')
+#    plt.show()
     atom_image = AtomImage.AtomImage(I_f, imaging_beam)
     return atom_image

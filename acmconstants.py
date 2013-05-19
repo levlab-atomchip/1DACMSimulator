@@ -25,7 +25,8 @@ G2 = 1
 OMEGA_RES = 2*pi*384.230e12 #Hz
 LINEWIDTH_RES = 2*pi*6.0666e6 #Hz
 WAVELENGTH_RES = 780e-9 #m
-ISAT = 16.0 #W/m^2
+ISAT = 35.7 #W/m^2
+SIGMA_0 = 1.356e-13 #m^2, resonant x section
 
 # Rb87 Properties
 A = 5.2e-9 #m, scattering length
