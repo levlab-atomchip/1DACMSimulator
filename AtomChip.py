@@ -64,9 +64,9 @@ mount_length = 50e-3
 #Trap parameters
 h = 1000#microns
 I_in = 25.4#amp (a guess)
-# beta = .5*((a/(h+h_rad/2))^2 + 1)
-# I_out = .80*beta * I_in #Use a fudge factor to tune trap height
-I_out = 37.4
+beta = .5*((a/(h+h_rad/2))**2 + 1)
+I_out = .80*beta * I_in #Use a fudge factor to tune trap height
+#I_out = 37.4
 I_ax =11.7 #amps, guess
 I_dimple =0
 I_micro_trap = 0
@@ -76,11 +76,11 @@ I_micro_dimple = 0
 
 #These should be altered to match the output of the script, and iterated
 #until input and output converge.
-# x_trap = -1.25e-6 #meters
-# y_trap = 1.25e-6 #meters
+x_trap = -1.25e-6 #meters
+y_trap = 1.25e-6 #meters
 
-x_trap = 13.75e-6 #meters
-y_trap = -2.5e-6 #meters
+#x_trap = 13.75e-6 #meters
+#y_trap = -2.5e-6 #meters
 
 # Set bias field to ensure trap height
 # Bias fields (in Gauss)

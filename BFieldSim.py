@@ -44,7 +44,7 @@ from math import pi, sqrt
 clear = "\n"*100
 
 #Simulation Mode
-fieldplot = 1
+fieldplot = 0
 plotxz = 0
 
 ## Plot parameters
@@ -112,29 +112,41 @@ z_spacing = z_range[1]-z_range[0] #meters
 
 
 #for ii = 1:n
-B_tot_trap = []
+B_tot_trap = np.array([])
+B_bias = np.array((B_xbias, B_ybias, B_zbias))
+#print B_bias
 for ii in range(n):
     tot_field = np.array((0,0,0))
     for wire in WireSpecs.allwires:
-        tot_field += wire.bfieldcalc(x_trap, y_trap, z_range[ii])
+        if wire.current != 0:
+#            print wire.bfieldcalc(x_trap, y_trap, z_range[ii])
+            this_field = (wire.bfieldcalc(x_trap, y_trap, z_range[ii]) + B_bias)
+#            print this_field
+            tot_field = tot_field + this_field
+#            print wire.name
+#            print wire.current
+#            print 1e6*tot_field
+#    print tot_field
     tot_field_norm = np.linalg.norm(tot_field)
-    B_tot_trap.append(tot_field_norm)
+#    print tot_field_norm
+    B_tot_trap = np.append(B_tot_trap,tot_field_norm)
 #    B_tot_trap[ii]=Field_Realistic(x_trap,y_trap,z_range(1,ii),B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
 #    z_range(2,ii) = B_tot_center #in Tesla
 
 
 
 #correct for gravity
-gravity_equivalent_field = (m_Rb87 * g)/(mu_B) * z_range
-B_tot_trap = B_tot_trap - gravity_equivalent_field
+#gravity_equivalent_field = (m_Rb87 * g)/(mu_B) * z_range
+#B_tot_trap = B_tot_trap - gravity_equivalent_field
 #print B_tot_trap
-min_B_tot = min(B_tot_trap)
+#print B_tot_trap*1e4
+min_B_tot = np.min(B_tot_trap)
 min_index = np.argmin(B_tot_trap)
 
 trap_height = z_range[min_index]
 z_trap = trap_height
-if fieldplot == 0:
-    print 'Trap Height is %2.0f'%10**6*trap_height
+#if fieldplot == 0:
+print 'Trap Height is %2.0f'%1e6*trap_height
 #trap_height = h*1e-6
 #trap_height = 3e-3
 
@@ -158,10 +170,10 @@ if fieldplot == 1:
         for coords in np.ndenumerate(x):
             tot_field = np.array((0,0,0))
             for wire in WireSpecs.allwires:
-                tot_field += wire.bfieldcalc(x[coords][1], y_trap, z[coords][1])
-                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]) #gravity correction
+                tot_field += wire.bfieldcalc(x[coords][1], y_trap, z[coords][1]) + B_bias
+#                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]) #gravity correction
             tot_field_norm = np.linalg.norm(tot_field)
-            B_tot[coords[0]] = tot_field_norm
+            B_tot[coords[0]] = tot_field_norm - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1])
 #        B_tot=Field_Realistic(x,y_trap,z,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
 #        B_tot_grav_corr = B_tot - (m_Rb87 * g)/(mu_B) * z
         
@@ -195,10 +207,10 @@ if fieldplot == 1:
 #            print y[coords[0]]
             tot_field = np.array((0,0,0))
             for wire in WireSpecs.allwires:
-                tot_field += wire.bfieldcalc(coords[1], y[coords[0]], z_trap)
-                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z_trap) #gravity correction
+                tot_field += wire.bfieldcalc(coords[1], y[coords[0]], z_trap) + B_bias
+#                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z_trap) #gravity correction
             tot_field_norm = np.linalg.norm(tot_field)
-            B_tot[coords[0]] = tot_field_norm
+            B_tot[coords[0]] = tot_field_norm - (0,0,(m_Rb87 * g)/(mu_B) * z_trap) #gravity correction
             npoints_complete += 1
         print B_tot
 #        B_tot=Field_Realistic(x,y,trap_height,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)

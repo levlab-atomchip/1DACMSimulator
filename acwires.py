@@ -71,8 +71,9 @@ Created on Tue Apr 23 22:54:24 2013
 
 from math import pi, sqrt
 import numpy as np
+from acmconstants import MU_0
 
-mu = (4*pi)*10**-7 
+MU_0 = (4*pi)*10**-7 
 
 class Wire():
     def __init__(self, name, length, width, height, current, subwires):
@@ -97,7 +98,7 @@ class HWire(Wire):
         suby = np.linspace(self.y0, self.y0 + self.width, self.subwires)
         subz = np.linspace(self.z0, self.z0 + self.height, self.subwires)
         nn = self.subwires**2
-        const_G=mu*self.current/(4*pi*nn)
+        const_G=MU_0*self.current/(4*pi*nn)
         for i in range(self.subwires): #loop over y
             for j in range(self.subwires): #loop over z
                 beta = (z-subz[j])**2 + (y-suby[i])**2
@@ -122,7 +123,7 @@ class VWire(Wire):
         subx = np.linspace(self.x0, self.x0 + self.width, self.subwires)
         subz = np.linspace(self.z0, self.z0 + self.height, self.subwires)
         nn = self.subwires**2
-        const_G=mu*self.current/(4*pi*nn)
+        const_G=MU_0*self.current/(4*pi*nn)
         for i in range(self.subwires): #loop over x
             for j in range(self.subwires): #loop over z
                 beta = (z-subz[j])**2 + (x-subx[i])**2
@@ -147,7 +148,7 @@ class NWire(Wire):
         subx = np.linspace(self.x0, self.x0 + self.width, self.subwires)
         suby = np.linspace(self.y0, self.y0 + self.height, self.subwires)
         nn = self.subwires**2
-        const_G=mu*self.current/(4*pi*nn)
+        const_G=MU_0*self.current/(4*pi*nn)
         for i in range(self.subwires): #loop over x
             for j in range(self.subwires): #loop over y
                 beta = (x-subx[i])**2 + (y-suby[j])**2
