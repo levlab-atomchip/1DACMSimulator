@@ -105,7 +105,7 @@ class HWire(Wire):
                     (x-XL)**2))-(x-XR)/(beta*sqrt(beta+(x-XR)**2)))
                 B_Gy=B_G*(subz[j]-z)
                 B_Gz=B_G*(y-suby[i])
-        return (0, B_Gy, B_Gz)
+        return np.array((0, B_Gy, B_Gz))
         
                 
 class VWire(Wire):
@@ -130,7 +130,7 @@ class VWire(Wire):
                     (y - YD)**2))-(y - YU)/(beta*sqrt(beta+(y - YU)**2)))
                 B_Gx=B_G*(z - subz[j])
                 B_Gz=B_G*(subx[i] - x)
-        return (B_Gx, 0, B_Gz)
+        return np.array((B_Gx, 0, B_Gz))
         
         
 class NWire(Wire):
@@ -155,4 +155,4 @@ class NWire(Wire):
                     (z - ZD)**2))-(z - ZU)/(beta*sqrt(beta+(z - ZU)**2)))
                 B_Gx=B_G*(suby[j] - y)
                 B_Gy=B_G*(x - subx[i])
-        return (B_Gx, B_Gy, 0)
+        return np.array((B_Gx, B_Gy, 0))

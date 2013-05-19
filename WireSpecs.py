@@ -850,7 +850,7 @@ nwires.append(NWire( 'Left Lower Bias Lead Rod', 390e-3,  0,  0,  -I_out,  1,  -
 
 nwires.append(NWire( 'Right Lower Bias Lead Rod', 390e-3,  0,  0,  I_out,  1,  30e-3,  0,  -40e-2))
 
-
+allwires = hwires + vwires + nwires
 
 # 
 # nwire(i).name = 'Left Central Lead Rod'
@@ -881,88 +881,88 @@ nwires.append(NWire( 'Right Lower Bias Lead Rod', 390e-3,  0,  0,  I_out,  1,  3
 
 ## Vector Generation
 # Horizontal
-fin_horz_params = zeros(5,n_hsubwires)
-XL = []
-XR = []
-Y0 = []
-Z0 = []
-I = []
-
-#for ii = 1:n_hwires
-for ii in range(n_hwires):
-    nn = hwire(ii).subwires
-    XL = [XL, hwire(ii).xl*ones(1,nn^2)]
-    XR = [XR, (hwire(ii).xl + hwire(ii).length)*ones(1,nn^2)]
-    Y0 = [Y0, repmat(linspace(hwire(ii).y0, (hwire(ii).y0 + hwire(ii).width), nn),1,nn)]
-    z_values = linspace(hwire(ii).z0, (hwire(ii).z0 + hwire(ii).height),nn)
-    Z_vector = []
-#    for jj = 1:hwire(ii).subwires
-    for jj in range(hwire(ii).subwires):
-        Z_vector = [Z_vector, z_values(jj)*ones(1,nn)]
-    Z0 = [Z0, Z_vector]
-    I = [I, hwire(ii).current/nn^2 * ones(1,nn^2)]
-
-fin_horz_params(1,:) = XL
-fin_horz_params(2,:) = XR
-fin_horz_params(3,:) = Y0
-fin_horz_params(4,:) = Z0
-fin_horz_params(5,:) = I
-
-
-# Vertical
-fin_vert_params = zeros(5,n_vsubwires)
-YD = []
-YU = []
-X0 = []
-Z0 = []
-I = []
+#fin_horz_params = zeros(5,n_hsubwires)
+#XL = []
+#XR = []
+#Y0 = []
+#Z0 = []
+#I = []
+#
+##for ii = 1:n_hwires
+#for ii in range(n_hwires):
+#    nn = hwire(ii).subwires
+#    XL = [XL, hwire(ii).xl*ones(1,nn^2)]
+#    XR = [XR, (hwire(ii).xl + hwire(ii).length)*ones(1,nn^2)]
+#    Y0 = [Y0, repmat(linspace(hwire(ii).y0, (hwire(ii).y0 + hwire(ii).width), nn),1,nn)]
+#    z_values = linspace(hwire(ii).z0, (hwire(ii).z0 + hwire(ii).height),nn)
+#    Z_vector = []
+##    for jj = 1:hwire(ii).subwires
+#    for jj in range(hwire(ii).subwires):
+#        Z_vector = [Z_vector, z_values(jj)*ones(1,nn)]
+#    Z0 = [Z0, Z_vector]
+#    I = [I, hwire(ii).current/nn^2 * ones(1,nn^2)]
+#
+#fin_horz_params(1,:) = XL
+#fin_horz_params(2,:) = XR
+#fin_horz_params(3,:) = Y0
+#fin_horz_params(4,:) = Z0
+#fin_horz_params(5,:) = I
+#
+#
+## Vertical
+#fin_vert_params = zeros(5,n_vsubwires)
+#YD = []
+#YU = []
+#X0 = []
+#Z0 = []
+#I = []
 
 #for ii = 1:n_vwires
-for ii in range(n_vwires):
-    nn = vwire(ii).subwires
-    YD = [YD, vwire(ii).yd*ones(1,nn^2)]
-    YU = [YU, (vwire(ii).yd + vwire(ii).length)*ones(1,nn^2)]
-    X0 = [X0, repmat(linspace(vwire(ii).x0, (vwire(ii).x0 + vwire(ii).width), nn),1,nn)]
-    z_values = linspace(vwire(ii).z0, (vwire(ii).z0 + vwire(ii).height),nn)
-    Z_vector = []
-#    for jj = 1:vwire(ii).subwires
-    for jj in range(vwire(ii).subwires):
-        Z_vector = [Z_vector, z_values(jj)*ones(1,nn)]
-    Z0 = [Z0, Z_vector]
-    I = [I, vwire(ii).current/nn^2 * ones(1,nn^2)]
-
-fin_vert_params(1,:) = YD
-fin_vert_params(2,:) = YU
-fin_vert_params(3,:) = X0
-fin_vert_params(4,:) = Z0
-fin_vert_params(5,:) = I
-
-
-# Normal
-fin_norm_params = zeros(5,n_nsubwires)
-ZD = []
-ZU = []
-X0 = []
-Y0 = []
-I = []
-
-#for ii = 1:n_nwires
-for ii in range(n_nwires):
-    nn = nwire(ii).subwires
-    ZD = [ZD, nwire(ii).zd*ones(1,nn^2)]
-    ZU = [ZU, (nwire(ii).zd + nwire(ii).length)*ones(1,nn^2)]
-    X0 = [X0, repmat(linspace(nwire(ii).x0, (nwire(ii).x0 + nwire(ii).width), nn),1,nn)]
-    y_values = linspace(nwire(ii).y0, (nwire(ii).y0 + nwire(ii).breadth),nn)
-    Y_vector = []
-#    for jj = 1:nwire(ii).subwires
-    for jj in range(nwire(ii).subwires):
-        Y_vector = [Y_vector, y_values(jj)*ones(1,nn)]
-    Y0 = [Y0, Y_vector]
-    I = [I, nwire(ii).current/nn^2 * ones(1,nn^2)]
-
-fin_norm_params(1,:) = ZD
-fin_norm_params(2,:) = ZU
-fin_norm_params(3,:) = X0
-fin_norm_params(4,:) = Y0
-fin_norm_params(5,:) = I
-toc
+#for ii in range(n_vwires):
+#    nn = vwire(ii).subwires
+#    YD = [YD, vwire(ii).yd*ones(1,nn^2)]
+#    YU = [YU, (vwire(ii).yd + vwire(ii).length)*ones(1,nn^2)]
+#    X0 = [X0, repmat(linspace(vwire(ii).x0, (vwire(ii).x0 + vwire(ii).width), nn),1,nn)]
+#    z_values = linspace(vwire(ii).z0, (vwire(ii).z0 + vwire(ii).height),nn)
+#    Z_vector = []
+##    for jj = 1:vwire(ii).subwires
+#    for jj in range(vwire(ii).subwires):
+#        Z_vector = [Z_vector, z_values(jj)*ones(1,nn)]
+#    Z0 = [Z0, Z_vector]
+#    I = [I, vwire(ii).current/nn^2 * ones(1,nn^2)]
+#
+#fin_vert_params(1,:) = YD
+#fin_vert_params(2,:) = YU
+#fin_vert_params(3,:) = X0
+#fin_vert_params(4,:) = Z0
+#fin_vert_params(5,:) = I
+#
+#
+## Normal
+#fin_norm_params = zeros(5,n_nsubwires)
+#ZD = []
+#ZU = []
+#X0 = []
+#Y0 = []
+#I = []
+#
+##for ii = 1:n_nwires
+#for ii in range(n_nwires):
+#    nn = nwire(ii).subwires
+#    ZD = [ZD, nwire(ii).zd*ones(1,nn^2)]
+#    ZU = [ZU, (nwire(ii).zd + nwire(ii).length)*ones(1,nn^2)]
+#    X0 = [X0, repmat(linspace(nwire(ii).x0, (nwire(ii).x0 + nwire(ii).width), nn),1,nn)]
+#    y_values = linspace(nwire(ii).y0, (nwire(ii).y0 + nwire(ii).breadth),nn)
+#    Y_vector = []
+##    for jj = 1:nwire(ii).subwires
+#    for jj in range(nwire(ii).subwires):
+#        Y_vector = [Y_vector, y_values(jj)*ones(1,nn)]
+#    Y0 = [Y0, Y_vector]
+#    I = [I, nwire(ii).current/nn^2 * ones(1,nn^2)]
+#
+#fin_norm_params(1,:) = ZD
+#fin_norm_params(2,:) = ZU
+#fin_norm_params(3,:) = X0
+#fin_norm_params(4,:) = Y0
+#fin_norm_params(5,:) = I
+#toc

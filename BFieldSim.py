@@ -32,14 +32,20 @@ Documentation is the accompanying text file.
 
 #The z ground plane is the top of the MACOR surface.
 
-
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 from AtomChip import *
 import numpy as np
 import acwires
+import WireSpecs
+import matplotlib.pyplot as plt
+from math import pi, sqrt
+
+clear = "\n"*100
 
 #Simulation Mode
-fieldplot = 0
-plotxz = 1
+fieldplot = 1
+plotxz = 0
 
 ## Plot parameters
 plot_on=1
@@ -59,6 +65,12 @@ plotleft=-a_ax # boundary of plots, meters
 plotright=a_ax
 plottop = a
 plotbottom = -a
+
+#resolution=0.1 # resolution of the plots, meters
+#plotleft=-5 # boundary of plots, meters
+#plotright=5
+#plottop = 2
+#plotbottom = -2
 # 
 # resolution=a/400 # resolution of the plots, meters
 # plotleft=-a_ax/8 # boundary of plots, meters
@@ -84,43 +96,52 @@ plotbottom = -a
 # plottop = 3*a
 # plotbottom = -a
 
-(fin_horz_params, fin_vert_params, fin_norm_params) = Wire_Geometry_Specification_Realistic_101910()
+#(fin_horz_params, fin_vert_params, fin_norm_params) = Wire_Geometry_Specification_Realistic_101910()
 ## Find trap
 
 if plotxz == 1:
     n = 100 #how many points to check
-    z_range = np.zeros(2,n)
-    z_range(1,:) = np.linspace(z*.8,z*1.5,n) #meters
+#    z_range = np.zeros(2,n)
+    z_range = np.linspace(z*.8,z*1.5,n) #meters
 else:
-    n = 1000
-    z_range = np.zeros(2,n)
-    z_range(1,:) = np.linspace(z*.9,z*1.1,n) #meters
-end
+    n = 100
+#    z_range = np.zeros(2,n)
+    z_range = np.linspace(z*.9,z*1.1,n) #meters
 
-z_spacing = z_range(1,2)-z_range(1,1) #meters
+z_spacing = z_range[1]-z_range[0] #meters
 
 
 #for ii = 1:n
+B_tot_trap = []
 for ii in range(n):
-    B_tot_center=Field_Realistic(x_trap,y_trap,z_range(1,ii),B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
-    z_range(2,ii) = B_tot_center #in Tesla
+    tot_field = np.array((0,0,0))
+    for wire in WireSpecs.allwires:
+        tot_field += wire.bfieldcalc(x_trap, y_trap, z_range[ii])
+    tot_field_norm = np.linalg.norm(tot_field)
+    B_tot_trap.append(tot_field_norm)
+#    B_tot_trap[ii]=Field_Realistic(x_trap,y_trap,z_range(1,ii),B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
+#    z_range(2,ii) = B_tot_center #in Tesla
+
 
 
 #correct for gravity
-gravity_equivalent_field = (m_Rb87 * g)/(mu_B) * z_range(1,:)
-z_range(2,:) = z_range(2,:) - gravity_equivalent_field
-[min_B_tot, min_index] = min(z_range(2,:))
+gravity_equivalent_field = (m_Rb87 * g)/(mu_B) * z_range
+B_tot_trap = B_tot_trap - gravity_equivalent_field
+#print B_tot_trap
+min_B_tot = min(B_tot_trap)
+min_index = np.argmin(B_tot_trap)
 
-trap_height = z_range(1,min_index)
+trap_height = z_range[min_index]
+z_trap = trap_height
 if fieldplot == 0:
-    disp(['Trap Height is ', num2str(10^6*trap_height)])
+    print 'Trap Height is %2.0f'%10**6*trap_height
 #trap_height = h*1e-6
 #trap_height = 3e-3
 
-figure(13)
-plot(z_range(1,:)*1e3, z_range(2,:)*1e4)
-xlabel('Z axis (mm)') #Standard axis labelling
-ylabel('Effective |B|, (G)')
+plt.plot(z_range*1e3, B_tot_trap*1e4)
+plt.xlabel('Z axis (mm)') #Standard axis labelling
+plt.ylabel('Effective |B|, (G)')
+plt.show()
 
 ## Field calculations
 
@@ -130,58 +151,102 @@ if fieldplot == 1:
     
     if plotxz == 1:
         
-        [x,z] =meshgrid(plotleft:resolution:plotright, z_range(1,:))
-        B_tot=Field_Realistic(x,y_trap,z,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
-        B_tot_grav_corr = B_tot - (m_Rb87 * g)/(mu_B) * z
+#        x, z = np.meshgrid(np.arange(plotleft, plotright, resolution), z_range)
         
-        figure(1)
-        meshc(x*10^3,z*10^3,B_tot_grav_corr*10^4)
-        xlabel('X axis (mm)')
-        ylabel('Z axis (mm)') #standard axis labelling
-        zlabel('B field (G)')
-        view(0,90)
+        x, z = np.meshgrid(np.arange(plotleft, plotright, resolution), z_range)
+        B_tot = np.zeros(x.shape)
+        for coords in np.ndenumerate(x):
+            tot_field = np.array((0,0,0))
+            for wire in WireSpecs.allwires:
+                tot_field += wire.bfieldcalc(x[coords][1], y_trap, z[coords][1])
+                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]) #gravity correction
+            tot_field_norm = np.linalg.norm(tot_field)
+            B_tot[coords[0]] = tot_field_norm
+#        B_tot=Field_Realistic(x,y_trap,z,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
+#        B_tot_grav_corr = B_tot - (m_Rb87 * g)/(mu_B) * z
+        
+        
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+#        ax.plot_trisurf(x*1e3,z*1e3,B_tot*1e4, cmap=cm.jet, linewidth=0.2)
+        ax.plot_surface(x*1e3,z*1e3,B_tot*1e4, rstride=8, cstride=8, alpha=0.3)
+        plt.xlabel('X axis (mm)')
+        plt.ylabel('Z axis (mm)') #standard axis labelling
+        ax.set_zlabel('B field (G)')
+        plt.show()
+#        meshc(x*1e3,z*1e3,B_tot*1e4)
+#        
+#        plt.show()
         
     else:
-        
-        [x,y]=meshgrid(plotleft:resolution:plotright, plotbottom:resolution:plottop)
-        B_tot=Field_Realistic(x,y,trap_height,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
+        x, y =np.meshgrid(np.arange(plotleft, plotright, resolution), np.arange(plotbottom, plottop, resolution))
+#        print x.shape
+        B_tot = np.zeros(x.shape)
+        npoints = B_tot.size
+        npoints_complete = 0
+        for coords in np.ndenumerate(x):
+            print clear
+            print "%2.0f percent complete"%(100*npoints_complete/npoints)
+#            print coords
+#            print x[coords][1]
+#            print coords[1]
+#            print y[coords][1]
+#            print y[coords[0]]
+            tot_field = np.array((0,0,0))
+            for wire in WireSpecs.allwires:
+                tot_field += wire.bfieldcalc(coords[1], y[coords[0]], z_trap)
+                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z_trap) #gravity correction
+            tot_field_norm = np.linalg.norm(tot_field)
+            B_tot[coords[0]] = tot_field_norm
+            npoints_complete += 1
+        print B_tot
+#        B_tot=Field_Realistic(x,y,trap_height,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
         
         
         
         #find the trap
-        [min_field, y_ind] = min(B_tot)
-        [min_field, x_ind] = min(min_field)
-        y_ind = y_ind(1,x_ind)
-        x_trap = x(1,x_ind)
-        y_trap = y(y_ind,1)
+        min_field = np.min(B_tot)
+        min_ind = np.unravel_index(B_tot.argmin(), B_tot.shape)
+        x_ind = min_ind[0]
+        y_ind = min_ind[1]
+        x_trap = x[x_ind, 0]
+        y_trap = y[0, y_ind]
         
-        [GradBx,GradBy]=gradient(B_tot,resolution)
-        [GGradBx,GGradByx]=gradient(GradBx,resolution)
-        [GGradBxy,GGradBy]=gradient(GradBy,resolution)
+        GradBx,GradBy = np.gradient(B_tot,resolution, resolution)
+        GGradBx, GGradByx = np.gradient(GradBx,resolution, resolution)
+        GGradBxy,GGradBy = np.gradient(GradBy,resolution, resolution)
         ## Extract and print frequency
         # The first part attempts to extract the transverse and longitudinal
         # frequencies by fitting to a paraboloid and extracting the principal values
-        traploc = [y_ind, x_ind]
-        a = abs(GGradBy(traploc(1),traploc(2)))
-        b = abs(.5*(GGradByx(traploc(1),traploc(2)) + GGradBxy(traploc(1),traploc(2))))
-        c = abs(GGradBx(traploc(1),traploc(2)))
-        Principal_Matrix = [a, b; b, c]
-        [vectors, values] = eig(Principal_Matrix)
-        freqs = (1.2754)*sqrt(abs(eig(Principal_Matrix))) #Hz
+        traploc = [x_ind, y_ind]
+        print traploc
+        print GGradBy
+        a = abs(GGradBy[(traploc[0],traploc[1])])
+        b = abs(.5*(GGradByx[(traploc[0],traploc[1])] + GGradBxy[(traploc[0],traploc[1])]))
+        c = abs(GGradBx[(traploc[0],traploc[1])])
+        print a
+        print b
+        print c
+        Principal_Matrix = np.array([[a, b], [b, c]])
+        values, vectors = np.linalg.eig(Principal_Matrix)
+        freqs = []
+        for val in values:
+            freqs.append((1.2754)*sqrt(abs(val))) #Hz
         f_transverse = max(freqs)
         f_longitudinal = min(freqs)
         omega_transverse = 2*pi*f_transverse
         omega_longitudinal = 2*pi*f_longitudinal
         
         # Try to extract f_transverse by fitting a parabola to z_range
-        grad_z = gradient(z_range(2,:), z_spacing)
-        ggrad_z = gradient(grad_z, z_spacing)
-        ddBdzz = ggrad_z(min_index)
+        grad_z = np.gradient(B_tot_trap, z_spacing)
+        ggrad_z = np.gradient(grad_z, z_spacing)
+        ddBdzz = ggrad_z[min_index]
         f_z = 1.2754*sqrt(abs(ddBdzz))
         omega_z = 2*pi*f_z
         
-        B_ybias = B_ybias*10^4 #Gauss
-        B_tot_center = B_tot(traploc(1),traploc(2))*1e4 #Gauss
+        B_ybias = B_ybias*1e4 #Gauss
+        B_tot_center = B_tot[(traploc[0],traploc[1])]*1e4 #Gauss
         trap_height = trap_height*1e6 #microns
         
         ## Other Trap Parameters
@@ -189,18 +254,28 @@ if fieldplot == 1:
         f_rad_ODT = 40 #Hz, extracted from Lin
         f_ax_ODT = .3 #Hz, extracted from Lin
         
-        AC_trap_temp = ((f_z^2 * f_longitudinal)/(f_rad_ODT^2 * f_ax_ODT))^(1/3) * ODT_temp
-        cloud_length = 2*1e6*(k_B * AC_trap_temp / (m_Rb87 * omega_longitudinal^2))^.5 #microns
-        cloud_width = 2*1e6*(k_B * AC_trap_temp / (m_Rb87 * omega_z^2))^.5 #microns
+        AC_trap_temp = ((f_z**2 * f_longitudinal)/(f_rad_ODT**2 * f_ax_ODT))**(1/3) * ODT_temp
+        cloud_length = 2*1e6*(k_B * AC_trap_temp / (m_Rb87 * omega_longitudinal**2))**.5 #microns
+        cloud_width = 2*1e6*(k_B * AC_trap_temp / (m_Rb87 * omega_z**2))**.5 #microns
         
         ## Plotting
         if plot_on==1:
-            figure(1)
-            meshc(x*10^3,y*10^3,B_tot*10^4)
-            xlabel('X axis (mm)')
-            ylabel('Y axis (mm)') #standard axis labelling
-            zlabel('B field (G)')
-            view(0,0)
+#            meshc(x*1e3,y*1e3,B_tot*1e4)
+#            plt.xlabel('X axis (mm)')
+#            plt.ylabel('Y axis (mm)') #standard axis labelling
+#            plt.zlabel('B field (G)')
+#            plt.show()
+            
+            fig = plt.figure()
+            ax = fig.gca(projection='3d')
+
+#            ax.plot_trisurf(x*1e3,y*1e3,B_tot*1e4, cmap=cm.jet, linewidth=0.2)
+            ax.plot_surface(x*1e3,y*1e3,B_tot*1e4, rstride=8, cstride=8, alpha=0.3)
+            plt.xlabel('X axis (mm)')
+            plt.ylabel('Y axis (mm)') #standard axis labelling
+#            plt.zlabel('B field (G)')
+            ax.set_zlabel('B field (G)')
+            plt.show()
             
             #     figure(14)
             #     plot(z_range(1,:)*1e3, ggrad_z)
