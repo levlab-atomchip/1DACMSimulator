@@ -5,16 +5,19 @@ Created on Sun May 19 15:15:38 2013
 @author: Will
 """
 
-namedtuple('ImagingBeam',['wavelength','intensity','linewidth', 'angle', 'focus','waist'])
-''' wavelength / nm
-    intensity / W/m2
-    linewidth / Mhz
-    angle / radian, from mirror plane
-    focus / um, from atom cloud?
-    waist / um '''
+#namedtuple('ImagingBeam',['wavelength','intensity','linewidth', 'angle', 'focus','waist'])
+#''' wavelength / nm
+#    intensity / W/m2
+#    linewidth / Mhz
+#    angle / radian, from mirror plane
+#    focus / um, from atom cloud?
+#    waist / um '''
+    
+from acmconstants import C
+from math import pi    
     
 class ImagingBeam: 
-    def __init__(self,wavelength, power, linewidth, angle, focus, waist):
+    def __init__(self, wavelength, power, linewidth, angle, focus, waist):
         self.wavelength = wavelength
         self.power = power
         self.linewidth = linewidth
@@ -28,4 +31,8 @@ class ImagingBeam:
         self.omega = 2 * pi * self.frequency
     def image_atoms(self, atom_cloud):
         ''' produce an AtomImage from an AtomCloud '''
+        pass
+    
+    def get_slice(self, z):
+        '''produce a 1D line section through the center of the beam at z'''
         pass
