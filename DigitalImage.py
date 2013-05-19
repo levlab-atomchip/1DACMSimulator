@@ -7,4 +7,5 @@ Created on Sun May 19 15:33:44 2013
 
 class DigitalImage:
     def __init__(self, image_array, CCD):
-        pass
+        self.image = image_array
+        self.CCD = CCD

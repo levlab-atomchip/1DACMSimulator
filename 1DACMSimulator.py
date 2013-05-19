@@ -21,6 +21,8 @@ import ImagingBeam
 import CCD
 import ImagingSystem
 import AtomDensity
+import matplotlib.pyplot as plt
+from Window import window
     
 
 
@@ -48,5 +50,13 @@ class ACMSimulator:
         focused_image = self.imaging_system.image(atom_image)
         digital_image = self.ccd.image(focused_image)
         return digital_image
+    
+    def plot_result(self, digital_image):
+        plt.plot(window.window, digital_image.image)
+        plt.show()
+        
+acmsimulator = ACMSimulator()
+result = acmsimulator.simulate()
+acmsimulator.plot_result(result)
         
     

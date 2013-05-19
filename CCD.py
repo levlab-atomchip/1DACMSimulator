@@ -15,6 +15,6 @@ class CCD:
         
     def image(self, atom_image):
         ''' produce a DigitalImage from an AtomImage '''
-        output_image = np.zeros(atom_image.shape)
+        output_image = np.zeros(atom_image.image.shape) #placeholder
         digital_image = DigitalImage.DigitalImage(output_image, self)
         return digital_image
