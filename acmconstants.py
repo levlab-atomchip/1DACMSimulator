@@ -5,12 +5,15 @@ Created on Thu May 02 21:43:22 2013
 @author: Will
 """
 
+from math import pi
+
 # Physical Constants, from Steck Rb87 Alkali D Line Data
 C = 2.99792e8 # m/s (exact)
 ALPHA = 7.29735e-3 # from wikipedia
 HBAR = 1.05457e-34 # J*sec
 MU_B = 9.274e-24 # J/T
 A_0 = 5.29e-11 #m, Bohr radius
+MU_0 = 4*pi*1e-7
 
 
 ## Imaging Transition Properties

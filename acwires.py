@@ -103,8 +103,9 @@ class HWire(Wire):
                 beta = (z-subz[j])**2 + (y-suby[i])**2
                 B_G=const_G*((x-XL)/(beta*sqrt(beta+
                     (x-XL)**2))-(x-XR)/(beta*sqrt(beta+(x-XR)**2)))
-                self.B_Gy=B_G*(subz[j]-z)
-                self.B_Gz=B_G*(y-suby[i])
+                B_Gy=B_G*(subz[j]-z)
+                B_Gz=B_G*(y-suby[i])
+        return (0, B_Gy, B_Gz)
         
                 
 class VWire(Wire):
@@ -127,8 +128,9 @@ class VWire(Wire):
                 beta = (z-subz[j])**2 + (x-subx[i])**2
                 B_G=const_G*((y - YD)/(beta*sqrt(beta+
                     (y - YD)**2))-(y - YU)/(beta*sqrt(beta+(y - YU)**2)))
-                self.B_Gx=B_G*(z - subz[j])
-                self.B_Gz=B_G*(subx[i] - x)
+                B_Gx=B_G*(z - subz[j])
+                B_Gz=B_G*(subx[i] - x)
+        return (B_Gx, 0, B_Gz)
         
         
 class NWire(Wire):
@@ -151,5 +153,6 @@ class NWire(Wire):
                 beta = (x-subx[i])**2 + (y-suby[j])**2
                 B_G=const_G*((z - ZD)/(beta*sqrt(beta+
                     (z - ZD)**2))-(z - ZU)/(beta*sqrt(beta+(z - ZU)**2)))
-                self.B_Gx=B_G*(suby[j] - y)
-                self.B_Gy=B_G*(x - subx[i])
+                B_Gx=B_G*(suby[j] - y)
+                B_Gy=B_G*(x - subx[i])
+        return (B_Gx, B_Gy, 0)
