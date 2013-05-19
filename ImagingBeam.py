@@ -30,7 +30,7 @@ class ImagingBeam:
         
 
         self.I_0 = 2* self.power / (pi * waist_0**2)
-        self.frequency = C / (wavelength * 1e-9)
+        self.frequency = C / (wavelength)
         self.omega = 2 * pi * self.frequency
         self.rayleigh = pi * waist_0**2 / wavelength
     def image_atoms(self, atom_cloud):

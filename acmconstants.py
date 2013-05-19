@@ -19,7 +19,8 @@ MU_0 = 4*pi*1e-7
 ## Imaging Transition Properties
 #THESE ARE WRONG!!!
 G1 = 1
-D12 = 1.73135e-29 #C*m
+#D12 = 1.73135e-29 #C*m
+D12 = 2.042*A_0
 G2 = 1
 OMEGA_RES = 2*pi*384.230e12 #Hz
 LINEWIDTH_RES = 2*pi*6.0666e6 #Hz
@@ -34,3 +35,5 @@ M = 87 * 1.7e-27 #kg
 #A = 100 * A_0
 #M = 162.5 * 1.7e-27
 #MU_B = 10* 9.274e-24
+
+CLOUD_THICKNESS = 1e-6

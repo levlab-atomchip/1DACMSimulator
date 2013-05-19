@@ -8,8 +8,8 @@ Created on Sun May 19 15:35:49 2013
 from collections import namedtuple
 import numpy as np
 
-wmin = -500 #um
-wmax = 500 #um
+wmin = -50 #um
+wmax = 50 #um
 wnum = 100
 
 wmin = wmin * 1e-6 #m
