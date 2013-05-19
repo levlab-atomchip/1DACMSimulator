@@ -79,27 +79,38 @@ class DigitalImage:
         pass
     
 class CCD:
-    def __init__(self, resolution, nbits):
-        self.resolution = resolution
-        self.nbits = nbits
+    def __init__(self, imaging_file):
+        pass
+#        self.resolution = resolution
+#        self.nbits = nbits
         
     def image(self, atom_image):
         ''' produce a DigitalImage from an AtomImage '''
         pass
     
-class ImagingSystem: pass
+class ImagingSystem:
+    def __init__(self, imaging_file):
+        pass
+    def image(self, atom_image):
+        pass
 
 class ACMSimulator:
-    def __init__(self):
-        self.current_slab = CurrentSlab()
-        self.atom_chip = AtomChip()
-        self.bfield = BField()
-        self.atom_density = AtomDensity()
-        self.atom_image = AtomImage()  
-        self.ccd = CCD()
-        self.imaging_system = ImagingSystem()
-        self.digital_image = DigitalImage()
+    def __init__(self, sample_file, atomchip_file, atomcloud_file, imaging_file):
+        self.current_slab = CurrentSlab(sample_file)
+        self.atom_chip = AtomChip(atomchip_file)
+        self.atom_density = AtomDensity(atomcloud_file)
+        self.imaging_beam = ImagingBeam(imaging_file)
+        self.ccd = CCD(imaging_file)
+        self.imaging_system = ImagingSystem(imaging_file)
     
-    def simulate(self): pass
+    def simulate(self):
+#        mag_trap = AtomChip.get_trap()
+        perturbed_field = (self.current_slab.get_field(self.window) 
+                         + self.atom_chip.get_field(self.window))
+        perturbed_cloud = self.atom_density.mag_potential(perturbed_field)
+        atom_image = self.imaging_beam.image_atoms(perturbed_cloud)
+        focused_image = self.imaging_system.image(atom_image)
+        digital_image = self.ccd.image(focused_image)
+        return digital_image
         
     
