@@ -27,8 +27,8 @@ from acmconstants import *
 import numpy as np
 from math import pi
     
-atom_linear = np.array([3e16*i for i in range(len(window.window))])
-atom_tophat = np.array([3e18 for i in range(len(window.window))])
+atom_linear = np.array([3e10*i for i in range(len(window.window))])
+atom_tophat = np.array([3e12 for i in range(len(window.window))])
 atom_tophat[0:512] = 0
 atom_tophat[1536:] = 0
 
@@ -71,14 +71,14 @@ class ACMSimulator:
         plt.show()
     def plot_absorption_image(self):
         light_image = self.ccd.image(self.imaging_beam.get_slice(0), 1e-3)
-        abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
+        abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0)
         plt.plot(window.window, 0 * self.atom_density.get_density())
         plt.scatter(np.linspace(window.min, window.max, 1024), abs_image)
         plt.title('Absorption Image')
         plt.show()
     def plot_error(self):
         light_image = self.ccd.image(self.imaging_beam.get_slice(0), 1e-3)
-        abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
+        abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0)
         print len(abs_image)
 #        abs_image = np.log(self.imaging_beam.get_slice(0) / self.atom_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
 #        error = np.abs((abs_image - self.atom_density.get_density()) / self.atom_density.get_density())
