@@ -6,7 +6,7 @@ Implementation assumes that an equal integer number of points lie on each pixel
 
 @author: Will
 """
-import DigitalImage
+import AtomImage
 import numpy as np
 from Window import window
 from math import floor
@@ -18,6 +18,7 @@ class CCD():
         self.pixel_size = pixel_size
         self.nbits = nbits
         self.dark_current = dark_current
+        self.length = num_pixel * pixel_size
         
     def image(self, analog_image, exposure_time):
         ''' produce a DigitalImage from an AtomImage '''
@@ -43,5 +44,5 @@ class CCD():
 #        print len(output_image)
         
 #        output_image =atom_image.image #placeholder
-        digital_image = DigitalImage.DigitalImage(output_image, self)
+        digital_image = AtomImage.DigitalImage(output_image_arr, self)
         return digital_image

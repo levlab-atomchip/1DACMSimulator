@@ -5,6 +5,9 @@ Created on Sun May 19 15:29:28 2013
 @author: Will
 """
 
+from Window import Window
+import numpy as np
+
 class Image():
     def __init__(self, image_arr, window):
         self.image_arr = image_arr
@@ -23,12 +26,28 @@ class AtomImage(Image):
         return self.imaging_beam
         
 class DigitalImage(Image):
-    def __init__(self, image_arr, CCD, window):
-        Image.__init__(image_arr, window)
-        self.image_arr = image_arr
+    def __init__(self, image_arr, CCD):
+        wmin = -0.5 * CCD.length
+        wmax = 0.5 * CCD.length
+        wnum = CCD.num_pixel
+        Image.__init__(image_arr, Window(wmin, wmax, wnum, 
+                                         np.linspace(wmin, wmax, wnum)))
         self.CCD = CCD
-    def get_analog(self, analog_window):
-        pass
+    def get_analog(self, analog_resolution):
+        wmin = -0.5 * self.CCD.length
+        wmax = 0.5 * self.CCD.length
+        window = np.arange(wmin, wmax, analog_resolution)
+        analog_window = Window(wmin, wmax, len(window), window)
+        pixel = 0
+        analog_arr = []
+        for cell in analog_window.window:
+            if (self.window.window[pixel] + self.CCD.pixel_size) > cell:
+                analog_arr.append(self.image_arr[pixel])
+            else:
+                pixel += 1
+                analog_arr.append(self.image_arr[pixel])
+        analog_image = Image(analog_arr, analog_window)
+        return analog_image
     def get_CCD(self):
         return self.CCD
         
