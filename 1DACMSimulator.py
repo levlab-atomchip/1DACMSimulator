@@ -42,7 +42,7 @@ class ACMSimulator:
     def __init__(self):
         self.atom_density = AtomDensity.AtomDensity(atom_tophat, 1e-6)
         self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / OMEGA_RES), ISAT*0.01*pi*(500e-6)**2, 10e6, 0, 0, 500e-6)
-        self.ccd = CCD.CCD(1024, (window.max - window.min) / 1024, 10)
+        self.ccd = CCD.CCD(1024, (window.max - window.min) / 1024, 10, 0.07)
         self.imaging_system = ImagingSystem.ImagingSystem()
     
     def simulate(self):
@@ -84,6 +84,8 @@ class ACMSimulator:
         plt.scatter(np.linspace(window.min, window.max, 1024), abs_image)
         plt.title('error')
         plt.show()
+        
+        
 acmsimulator = ACMSimulator()
 result = acmsimulator.simulate()
 acmsimulator.plot_result()

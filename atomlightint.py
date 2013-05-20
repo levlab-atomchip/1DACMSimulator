@@ -29,8 +29,8 @@ def atom_light_interaction(imaging_beam, atom_density):
     abs_x_section = (3 * pi**2 * C**2 * A21 * gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)) / (OMEGA_RES**2)
 #    print 'lineshape factor:'
 #    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
-    print 'x_section:'
-    print abs_x_section
+#    print 'x_section:'
+#    print abs_x_section
     
     I_sat = (HBAR*imaging_beam.omega*A21)/(2*abs_x_section)
     

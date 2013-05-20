@@ -11,10 +11,11 @@ from math import floor
 from acmconstants import HBAR, OMEGA_RES
 
 class CCD:
-    def __init__(self, num_pixel, pixel_size, nbits):
+    def __init__(self, num_pixel, pixel_size, nbits, dark_current):
         self.num_pixel = num_pixel
         self.pixel_size = pixel_size
         self.nbits = nbits
+        self.dark_current = dark_current
         
     def image(self, analog_image, exposure_time):
         ''' produce a DigitalImage from an AtomImage '''
@@ -27,7 +28,9 @@ class CCD:
         for i in range(self.num_pixel):
             binsum = sum(signal[(pts_per_pix*i):(pts_per_pix*(i+1))])
 #            print binsum
-            n_photons = floor(exposure_time * binsum * self.pixel_size**2 / (HBAR * OMEGA_RES))
+            n_photons = (floor(exposure_time * binsum * self.pixel_size**2 
+                        / (HBAR * OMEGA_RES)) 
+            + np.random.poisson(self.dark_current*exposure_time))
 #            digital_image.extend([binsum/pts_per_pix]*(pts_per_pix))
             digital_image.append(n_photons)
 #            digital_image.append(binsum)
