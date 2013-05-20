@@ -38,3 +38,9 @@ M = 87 * 1.7e-27 #kg
 #MU_B = 10* 9.274e-24
 
 CLOUD_THICKNESS = 1e-6
+
+# Camera Properties
+# PIXIS 1024BR
+PIXEL_SIZE = 13e-6 #m
+NUM_PIXELS = 1024
+DARK_CURRENT = .07 #e/p/s

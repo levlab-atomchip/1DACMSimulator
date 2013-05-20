@@ -42,7 +42,7 @@ class ACMSimulator:
     def __init__(self):
         self.atom_density = AtomDensity.AtomDensity(atom_tophat, 1e-6)
         self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / OMEGA_RES), ISAT*0.01*pi*(500e-6)**2, 10e6, 0, 0, 500e-6)
-        self.ccd = CCD.CCD(1024, (window.max - window.min) / 1024, 10, 0.07)
+        self.ccd = CCD.CCD(NUM_PIXELS, (window.max - window.min) / NUM_PIXELS, 10, 0.07)
         self.imaging_system = ImagingSystem.ImagingSystem()
     
     def simulate(self):
@@ -57,7 +57,7 @@ class ACMSimulator:
         return self.digital_image
     
     def plot_result(self):
-        plt.plot(range(1024), self.digital_image.image)
+        plt.plot(range(NUM_PIXELS), self.digital_image.image)
         plt.title('Digital Image')
         plt.show()
     def plot_atom_image(self):
@@ -71,7 +71,7 @@ class ACMSimulator:
     def plot_absorption_image(self):
         light_image = self.ccd.image(self.imaging_beam.get_slice(0), 1e-3)
         abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
-        plt.plot(range(1024), abs_image)
+        plt.plot(range(NUM_PIXELS), abs_image)
         plt.title('Absorption Image')
         plt.show()
     def plot_error(self):
@@ -81,7 +81,7 @@ class ACMSimulator:
 #        abs_image = np.log(self.imaging_beam.get_slice(0) / self.atom_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
 #        error = np.abs((abs_image - self.atom_density.get_density()) / self.atom_density.get_density())
         plt.plot(window.window, self.atom_density.get_density())
-        plt.scatter(np.linspace(window.min, window.max, 1024), abs_image)
+        plt.scatter(np.linspace(window.min, window.max, NUM_PIXELS), abs_image)
         plt.title('error')
         plt.show()
         

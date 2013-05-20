@@ -61,5 +61,5 @@ def atom_light_interaction(imaging_beam, atom_density):
 #    plt.plot(window.window, I_f)
 #    plt.title('I_f')
 #    plt.show()
-    atom_image = AtomImage.AtomImage(I_f, imaging_beam)
+    atom_image = AtomImage.AtomImage(I_f, imaging_beam, window)
     return atom_image

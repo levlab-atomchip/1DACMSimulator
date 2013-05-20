@@ -2,6 +2,8 @@
 """
 Created on Sun May 19 15:31:44 2013
 
+Implementation assumes that an equal integer number of points lie on each pixel
+
 @author: Will
 """
 import DigitalImage
@@ -10,7 +12,7 @@ from Window import window
 from math import floor
 from acmconstants import HBAR, OMEGA_RES
 
-class CCD:
+class CCD():
     def __init__(self, num_pixel, pixel_size, nbits, dark_current):
         self.num_pixel = num_pixel
         self.pixel_size = pixel_size
@@ -35,7 +37,7 @@ class CCD:
             digital_image.append(n_photons)
 #            digital_image.append(binsum)
         
-        output_image = np.array(digital_image)
+        output_image_arr = np.array(digital_image)
 #        print 'output image:'
 #        print output_image
 #        print len(output_image)
