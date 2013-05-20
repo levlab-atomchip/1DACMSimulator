@@ -26,7 +26,7 @@ class CCD():
         image_res = (window.max - window.min) / window.num_cells #m
         pts_per_pix = int(self.pixel_size / image_res)
 
-        signal = analog_image
+        signal = analog_image.get_image_arr()
         digital_image = []
         for i in range(self.num_pixel):
             binsum = sum(signal[(pts_per_pix*i):(pts_per_pix*(i+1))])

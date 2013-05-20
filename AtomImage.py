@@ -30,7 +30,7 @@ class DigitalImage(Image):
         wmin = -0.5 * CCD.length
         wmax = 0.5 * CCD.length
         wnum = CCD.num_pixel
-        Image.__init__(image_arr, Window(wmin, wmax, wnum, 
+        Image.__init__(self, image_arr, Window(wmin, wmax, wnum, 
                                          np.linspace(wmin, wmax, wnum)))
         self.CCD = CCD
     def get_analog(self, analog_resolution):

@@ -14,7 +14,7 @@ class ImagingSystem:
     def image(self, atom_image):
         initial_window = atom_image.get_window()
         imaged_window = initial_window #placeholder
-        imaged_image = AtomImage.AtomImage(atom_image.get_image(), 
+        imaged_image = AtomImage.AtomImage(atom_image.get_image_arr(), 
                                            atom_image.get_imaging_beam(), 
                                            imaged_window)
         return imaged_image #placeholder
