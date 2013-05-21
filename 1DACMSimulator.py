@@ -80,19 +80,12 @@ class ACMSimulator:
     def plot_error(self):
         light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
-<<<<<<< HEAD
-        abs_image = AtomImage.Image(np.log(digital_light_image.get_image_arr() / 
-            self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS)
-        analog_abs_image = abs_image.get_analog((window.max - window.min
-                                                / window.num_cells))
-=======
         abs_image = AtomImage.DigitalImage(np.log(digital_light_image.get_image_arr() / 
             self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS), self.ccd)
 #        window_res = (window.max - window.min) / window.num_cells)
         analog_abs_image = abs_image.get_analog((window.max - window.min)
                                                 / window.num_cells)
 #        print analog_abs_image.get_image_arr()
->>>>>>> b3c1a8bcd50819985ca5bdaacf6e7777bf597419
 #        abs_image = np.log(self.imaging_beam.get_slice(0) / self.atom_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
         error = np.abs((analog_abs_image.get_image_arr() - self.atom_density.get_density()) 
                                     / self.atom_density.get_density())
