@@ -58,12 +58,7 @@ class ACMSimulator:
         return self.digital_image
     
     def plot_result(self):
-<<<<<<< HEAD
-        plt.plot(window.window, 0 * self.atom_density.get_density())
-        plt.scatter(np.linspace(window.min, window.max, 1024), self.digital_image.image)
-=======
         plt.plot(range(NUM_PIXELS), self.digital_image.get_image_arr())
->>>>>>> 141f3f5e98123d92404dfd6f47bd09c647093dce
         plt.title('Digital Image')
         plt.show()
     def plot_atom_image(self):
@@ -75,18 +70,6 @@ class ACMSimulator:
         plt.title('Atom Density')
         plt.show()
     def plot_absorption_image(self):
-<<<<<<< HEAD
-        light_image = self.ccd.image(self.imaging_beam.get_slice(0), 1e-3)
-        abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0)
-        plt.plot(window.window, 0 * self.atom_density.get_density())
-        plt.scatter(np.linspace(window.min, window.max, 1024), abs_image)
-        plt.title('Absorption Image')
-        plt.show()
-    def plot_error(self):
-        light_image = self.ccd.image(self.imaging_beam.get_slice(0), 1e-3)
-        abs_image = np.log(light_image.image / self.digital_image.image) / (SIGMA_0)
-        print len(abs_image)
-=======
         light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
         abs_image = np.log(digital_light_image.get_image_arr() / 
@@ -95,13 +78,13 @@ class ACMSimulator:
         plt.title('Absorption Image')
         plt.show()
     def plot_error(self):
+
         light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
         abs_image = np.log(digital_light_image.get_image_arr() / 
             self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS)
         analog_abs_image = abs_image.get_analog((window.max - window.min
                                                 / window.num_cells))
->>>>>>> 141f3f5e98123d92404dfd6f47bd09c647093dce
 #        abs_image = np.log(self.imaging_beam.get_slice(0) / self.atom_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
         error = np.abs((analog_abs_image - self.atom_density.get_density()) 
                                     / self.atom_density.get_density())
