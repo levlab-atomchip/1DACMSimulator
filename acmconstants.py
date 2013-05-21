@@ -38,7 +38,6 @@ M = 87 * 1.7e-27 #kg
 #MU_B = 10* 9.274e-24
 
 CLOUD_THICKNESS = 1e-6
-BG_NOISE_CURRENT = 30
 
 
 # Camera Properties
