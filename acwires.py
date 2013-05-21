@@ -5,75 +5,9 @@ Created on Tue Apr 23 22:54:24 2013
 @author: Will
 """
 
-#hwire(i).name = 'Central Trapping Macrowire'
-#hwire(i).xl = -l_trap/2
-#hwire(i).length = l_trap
-#hwire(i).y0 = -w_rad/2
-#hwire(i).width = w_rad
-#hwire(i).z0 = -h_rad
-#hwire(i).height = h_rad
-#hwire(i).current = I_in
-#hwire(i).subwires = n
-#n_hwires = n_hwires + 1
-#n_hsubwires = n_hsubwires + hwire(i).subwires^2
-#
-#vwire(i).name = 'Left Axial Bias Macrowire'
-#vwire(i).yd = -l_ax/2
-#vwire(i).length = l_ax
-#vwire(i).x0 = -a_ax/2-w_ax/2
-#vwire(i).width = w_ax
-#vwire(i).z0 = -sub - h_ax/2
-#vwire(i).height = h_ax
-#vwire(i).current = I_ax
-#vwire(i).subwires = n
-#n_vwires = n_vwires + 1
-#n_vsubwires = n_vsubwires + vwire(i).subwires^2
-
-# nwire(i).name = 'Left Axial Lead Macrowire'
-# nwire(i).zd = -15e-3
-# nwire(i).length =13.7e-3
-# nwire(i).x0 = -8.75e-3
-# nwire(i).width = 3e-3
-# nwire(i).y0 = 4e-3
-# nwire(i).breadth = 1e-3
-# nwire(i).current = -I_ax
-# nwire(i).subwires = n
-# n_nwires = n_nwires + 1
-# n_nsubwires = n_nsubwires + nwire(i).subwires^2
-# i = i + 1
-
-#fin_horz_params = zeros(5,n_hsubwires)
-#XL = []
-#XR = []
-#Y0 = []
-#Z0 = []
-#I = []
-#
-##for ii = 1:n_hwires
-#for ii in range(n_hwires):
-#    nn = hwire(ii).subwires
-#    XL = [XL, hwire(ii).xl*ones(1,nn^2)]
-#    XR = [XR, (hwire(ii).xl + hwire(ii).length)*ones(1,nn^2)]
-#    Y0 = [Y0, repmat(linspace(hwire(ii).y0, (hwire(ii).y0 + hwire(ii).width), nn),1,nn)]
-#    z_values = linspace(hwire(ii).z0, (hwire(ii).z0 + hwire(ii).height),nn)
-#    Z_vector = []
-##    for jj = 1:hwire(ii).subwires
-#    for jj in range(hwire(ii).subwires):
-#        Z_vector = [Z_vector, z_values(jj)*ones(1,nn)]
-#    Z0 = [Z0, Z_vector]
-#    I = [I, hwire(ii).current/nn^2 * ones(1,nn^2)]
-#
-#fin_horz_params(1,:) = XL
-#fin_horz_params(2,:) = XR
-#fin_horz_params(3,:) = Y0
-#fin_horz_params(4,:) = Z0
-#fin_horz_params(5,:) = I
-
 from math import pi, sqrt
 import numpy as np
 from acmconstants import MU_0
-
-MU_0 = (4*pi)*10**-7 
 
 class Wire():
     def __init__(self, name, length, width, height, current, subwires):

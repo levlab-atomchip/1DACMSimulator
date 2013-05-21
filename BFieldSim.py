@@ -6,8 +6,6 @@ Magnetic Trap Simulator, Python edition
 This is a Python port of the most up-to-date simulator I had written in 
 MatLab as of 7/4/10. It simulates
 the combined fields from the macrowires and microwires.
-This script requires the support script 'Field_Realistic.m'.
-Documentation is the accompanying text file.
 
 @author: Will
 """
@@ -119,15 +117,14 @@ for ii in range(n):
     for wire in WireSpecs.allwires:
         if wire.current != 0:
 #            print wire.bfieldcalc(x_trap, y_trap, z_range[ii])
-            this_field = (wire.bfieldcalc(x_trap, y_trap, z_range[ii]) 
-                            + B_bias)
+            this_field = wire.bfieldcalc(x_trap, y_trap, z_range[ii])
 #            print this_field
             tot_field = tot_field + this_field
 #            print wire.name
 #            print wire.current
 #            print 1e6*tot_field
 #    print tot_field
-    tot_field_norm = np.linalg.norm(tot_field)
+    tot_field_norm = np.linalg.norm(tot_field + B_bias)
 #    print tot_field_norm
     B_tot_trap = np.append(B_tot_trap,tot_field_norm)
 #    z_range(2,ii) = B_tot_center #in Tesla
@@ -168,11 +165,10 @@ if fieldplot == 1:
         for coords in np.ndenumerate(x):
             tot_field = np.array((0,0,0))
             for wire in WireSpecs.allwires:
-                tot_field += (wire.bfieldcalc(x[coords][1], 
+                tot_field += wire.bfieldcalc(x[coords][1], 
                                              y_trap, 
-                                             z[coords][1]) 
-                            + B_bias)
-            tot_field_norm = np.linalg.norm(tot_field)
+                                             z[coords][1])
+            tot_field_norm = np.linalg.norm(tot_field + B_bias)
             B_tot[coords[0]] = (tot_field_norm 
                                 - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]))
 #        B_tot_grav_corr = B_tot - (m_Rb87 * g)/(mu_B) * z
@@ -208,11 +204,10 @@ if fieldplot == 1:
 #            print y[coords[0]]
             tot_field = np.array((0,0,0))
             for wire in WireSpecs.allwires:
-                tot_field += (wire.bfieldcalc(coords[1], 
+                tot_field += wire.bfieldcalc(coords[1], 
                                               y[coords[0]], 
-                                                z_trap) 
-                            + B_bias)
-            tot_field_norm = np.linalg.norm(tot_field)
+                                                z_trap)
+            tot_field_norm = np.linalg.norm(tot_field + B_bias)
             B_tot[coords[0]] = (tot_field_norm 
                                 - (0,0,(m_Rb87 * g)/(mu_B) * z_trap)) 
                                 #gravity correction
