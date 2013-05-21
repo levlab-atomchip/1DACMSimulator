@@ -30,8 +30,8 @@ from math import pi
     
 atom_linear = np.array([3e10*i for i in range(len(window.window))])
 atom_tophat = np.array([3e12 for i in range(len(window.window))])
-atom_tophat[0:512] = 0
-atom_tophat[1536:] = 0
+atom_tophat[0:512] = 1
+atom_tophat[1536:] = 1
 
 class CurrentSlab: pass
 
@@ -80,12 +80,14 @@ class ACMSimulator:
     def plot_error(self):
         light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
-        abs_image = np.log(digital_light_image.get_image_arr() / 
-            self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS)
-        analog_abs_image = abs_image.get_analog((window.max - window.min
-                                                / window.num_cells))
+        abs_image = AtomImage.DigitalImage(np.log(digital_light_image.get_image_arr() / 
+            self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS), self.ccd)
+#        window_res = (window.max - window.min) / window.num_cells)
+        analog_abs_image = abs_image.get_analog((window.max - window.min)
+                                                / window.num_cells)
+#        print analog_abs_image.get_image_arr()
 #        abs_image = np.log(self.imaging_beam.get_slice(0) / self.atom_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
-        error = np.abs((analog_abs_image - self.atom_density.get_density()) 
+        error = np.abs((analog_abs_image.get_image_arr() - self.atom_density.get_density()) 
                                     / self.atom_density.get_density())
         plt.plot(window.window, error)
 #        plt.plot(window.window, self.atom_density.get_density())
