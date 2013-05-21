@@ -44,7 +44,7 @@ def atom_light_interaction(imaging_beam, atom_density):
 #    plt.title('abs_x_section_eff')
 #    plt.show()
     #now exponentiate and multiply this by atom_density and imaging_beam to make a new image
-    optical_density = abs_x_section_eff * atom_density.get_density()*CLOUD_THICKNESS
+    optical_density = abs_x_section_eff * atom_density.get_density()
     I_f = I_0 * np.exp(-1*optical_density)
 #    print 'I_0:'
 #    print I_0

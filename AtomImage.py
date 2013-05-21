@@ -41,6 +41,7 @@ class DigitalImage(Image):
         pixel = 0
         analog_arr = []
         for cell in analog_window.window:
+            print "pixel %d"%pixel
             if (self.window.window[pixel] + self.CCD.pixel_size) > cell:
                 analog_arr.append(self.image_arr[pixel])
             else:

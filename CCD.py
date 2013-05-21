@@ -9,8 +9,8 @@ Implementation assumes that an equal integer number of points lie on each pixel
 import AtomImage
 import numpy as np
 from Window import window
-from math import floor
-from acmconstants import HBAR, OMEGA_RES
+#from math import floor
+from acmconstants import HBAR, OMEGA_RES, BG_NOISE_CURRENT
 
 class CCD():
     def __init__(self, num_pixel, pixel_size, nbits, dark_current):
@@ -31,9 +31,10 @@ class CCD():
         for i in range(self.num_pixel):
             binsum = sum(signal[(pts_per_pix*i):(pts_per_pix*(i+1))])
 #            print binsum
-            n_photons = (floor(exposure_time * binsum * self.pixel_size**2 
+            n_photons = (round(exposure_time * binsum * self.pixel_size**2 
                         / (HBAR * OMEGA_RES)) 
-            + np.random.poisson(self.dark_current*exposure_time))
+            + np.random.poisson(self.dark_current*exposure_time)
+            + np.random.poisson(BG_NOISE_CURRENT * exposure_time))
 #            digital_image.extend([binsum/pts_per_pix]*(pts_per_pix))
             digital_image.append(n_photons)
 #            digital_image.append(binsum)

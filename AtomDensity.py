@@ -7,7 +7,7 @@ Created on Sun May 19 15:35:06 2013
 from Window import *
 
 class AtomDensity:
-    ''' 1D array of atom density in trap '''
+    ''' 1D array of atom column density in trap '''
     def __init__(self, density_array, temperature):
         '''density_array in m^-3 '''
         self.density = density_array
