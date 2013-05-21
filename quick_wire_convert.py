@@ -64,4 +64,5 @@ i = i + 1'''
 for lines in text.split('\n\n'):
     args = [line.split('=')[1] for line in lines.split('\n')]
 #    print args
-    print "nwires.append(NWire(%s, %s, %s, %s, %s, %s, %s, %s, %s))\n"%(args[0],args[2],args[4],args[6],args[7],args[8],args[3],args[5],args[1])
+    print ("nwires.append(NWire(%s, %s, %s, %s, %s, %s, %s, %s, %s))\n"
+    %(args[0],args[2],args[4],args[6],args[7],args[8],args[3],args[5],args[1]))

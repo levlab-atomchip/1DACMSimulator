@@ -51,7 +51,9 @@ class Measurement:
         self.number += 1
         self.value = (((self.number - 1) * self.value + observed_value) 
                     / (self.number))
-        self.uncertainty = math.sqrt((((self.number - 1)*(self.number - 2)*self.uncertainty**2
+        self.uncertainty = math.sqrt((((self.number - 1)*
+                                        (self.number - 2)*
+                                        self.uncertainty**2
                             + (self.number)*(observed_value - self.value)**2)
                             / (self.number - 1)**2))
 

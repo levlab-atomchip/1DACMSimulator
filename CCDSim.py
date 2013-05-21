@@ -61,7 +61,8 @@ for wavelength in lambdas:
 #    digital_amplitude = max(digital_image) - min(digital_image)
 #    sampled_amplitude = max(sampled_image) - min(sampled_image)
 #    digital_amplitude = np.std(digital_image)
-    bin_amplitude = sum([modulation[i]*digital_image[i] for i in range(len(modulation))])
+    bin_amplitude = sum([modulation[i]*digital_image[i] 
+                        for i in range(len(modulation))])
     
     binfft = fftpack.fftshift(fftpack.fft(digital_image))
     binpwr = [abs(z) for z in binfft]
@@ -69,8 +70,8 @@ for wavelength in lambdas:
 #    plt.show()    
     
 #    sampled_amplitude = np.std(sampled_image)
-    sampled_amplitude = sum([modulation[i]*sampled_image[i] for i in range(len(modulation))])
-#    sampled_amplitude = sum([i * j for i in modulation for j in sampled_image])
+    sampled_amplitude = sum([modulation[i]*sampled_image[i] 
+                            for i in range(len(modulation))])
     bin_gains.append(abs(bin_amplitude))
     sample_gains.append(abs(sampled_amplitude))
 #    plt.plot(xaxis, digital_image)

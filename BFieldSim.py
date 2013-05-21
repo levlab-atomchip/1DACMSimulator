@@ -96,7 +96,6 @@ plotbottom = -a
 # plottop = 3*a
 # plotbottom = -a
 
-#(fin_horz_params, fin_vert_params, fin_norm_params) = Wire_Geometry_Specification_Realistic_101910()
 ## Find trap
 
 if plotxz == 1:
@@ -120,7 +119,8 @@ for ii in range(n):
     for wire in WireSpecs.allwires:
         if wire.current != 0:
 #            print wire.bfieldcalc(x_trap, y_trap, z_range[ii])
-            this_field = (wire.bfieldcalc(x_trap, y_trap, z_range[ii]) + B_bias)
+            this_field = (wire.bfieldcalc(x_trap, y_trap, z_range[ii]) 
+                            + B_bias)
 #            print this_field
             tot_field = tot_field + this_field
 #            print wire.name
@@ -130,7 +130,6 @@ for ii in range(n):
     tot_field_norm = np.linalg.norm(tot_field)
 #    print tot_field_norm
     B_tot_trap = np.append(B_tot_trap,tot_field_norm)
-#    B_tot_trap[ii]=Field_Realistic(x_trap,y_trap,z_range(1,ii),B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
 #    z_range(2,ii) = B_tot_center #in Tesla
 
 
@@ -163,18 +162,19 @@ if fieldplot == 1:
     
     if plotxz == 1:
         
-#        x, z = np.meshgrid(np.arange(plotleft, plotright, resolution), z_range)
         
         x, z = np.meshgrid(np.arange(plotleft, plotright, resolution), z_range)
         B_tot = np.zeros(x.shape)
         for coords in np.ndenumerate(x):
             tot_field = np.array((0,0,0))
             for wire in WireSpecs.allwires:
-                tot_field += wire.bfieldcalc(x[coords][1], y_trap, z[coords][1]) + B_bias
-#                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]) #gravity correction
+                tot_field += (wire.bfieldcalc(x[coords][1], 
+                                             y_trap, 
+                                             z[coords][1]) 
+                            + B_bias)
             tot_field_norm = np.linalg.norm(tot_field)
-            B_tot[coords[0]] = tot_field_norm - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1])
-#        B_tot=Field_Realistic(x,y_trap,z,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
+            B_tot[coords[0]] = (tot_field_norm 
+                                - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]))
 #        B_tot_grav_corr = B_tot - (m_Rb87 * g)/(mu_B) * z
         
         
@@ -192,7 +192,8 @@ if fieldplot == 1:
 #        plt.show()
         
     else:
-        x, y =np.meshgrid(np.arange(plotleft, plotright, resolution), np.arange(plotbottom, plottop, resolution))
+        x, y =np.meshgrid(np.arange(plotleft, plotright, resolution), 
+                          np.arange(plotbottom, plottop, resolution))
 #        print x.shape
         B_tot = np.zeros(x.shape)
         npoints = B_tot.size
@@ -207,13 +208,16 @@ if fieldplot == 1:
 #            print y[coords[0]]
             tot_field = np.array((0,0,0))
             for wire in WireSpecs.allwires:
-                tot_field += wire.bfieldcalc(coords[1], y[coords[0]], z_trap) + B_bias
-#                tot_field = tot_field - (0,0,(m_Rb87 * g)/(mu_B) * z_trap) #gravity correction
+                tot_field += (wire.bfieldcalc(coords[1], 
+                                              y[coords[0]], 
+                                                z_trap) 
+                            + B_bias)
             tot_field_norm = np.linalg.norm(tot_field)
-            B_tot[coords[0]] = tot_field_norm - (0,0,(m_Rb87 * g)/(mu_B) * z_trap) #gravity correction
+            B_tot[coords[0]] = (tot_field_norm 
+                                - (0,0,(m_Rb87 * g)/(mu_B) * z_trap)) 
+                                #gravity correction
             npoints_complete += 1
         print B_tot
-#        B_tot=Field_Realistic(x,y,trap_height,B_xbias,B_ybias,B_zbias, fin_horz_params, fin_vert_params,fin_norm_params)
         
         
         
@@ -235,7 +239,8 @@ if fieldplot == 1:
         print traploc
         print GGradBy
         a = abs(GGradBy[(traploc[0],traploc[1])])
-        b = abs(.5*(GGradByx[(traploc[0],traploc[1])] + GGradBxy[(traploc[0],traploc[1])]))
+        b = abs(.5*(GGradByx[(traploc[0],traploc[1])] 
+                + GGradBxy[(traploc[0],traploc[1])]))
         c = abs(GGradBx[(traploc[0],traploc[1])])
         print a
         print b
@@ -266,9 +271,13 @@ if fieldplot == 1:
         f_rad_ODT = 40 #Hz, extracted from Lin
         f_ax_ODT = .3 #Hz, extracted from Lin
         
-        AC_trap_temp = ((f_z**2 * f_longitudinal)/(f_rad_ODT**2 * f_ax_ODT))**(1/3) * ODT_temp
-        cloud_length = 2*1e6*(k_B * AC_trap_temp / (m_Rb87 * omega_longitudinal**2))**.5 #microns
-        cloud_width = 2*1e6*(k_B * AC_trap_temp / (m_Rb87 * omega_z**2))**.5 #microns
+        AC_trap_temp = (((f_z**2 * f_longitudinal)
+                        /(f_rad_ODT**2 * f_ax_ODT))**(1/3)
+                        * ODT_temp)
+        cloud_length = (2*1e6*(k_B * AC_trap_temp 
+                        / (m_Rb87 * omega_longitudinal**2))**.5) #microns
+        cloud_width = (2*1e6*(k_B * AC_trap_temp 
+                        / (m_Rb87 * omega_z**2))**.5) #microns
         
         ## Plotting
         if plot_on==1:
@@ -282,7 +291,10 @@ if fieldplot == 1:
             ax = fig.gca(projection='3d')
 
 #            ax.plot_trisurf(x*1e3,y*1e3,B_tot*1e4, cmap=cm.jet, linewidth=0.2)
-            ax.plot_surface(x*1e3,y*1e3,B_tot*1e4, rstride=8, cstride=8, alpha=0.3)
+            ax.plot_surface(x*1e3,y*1e3,B_tot*1e4, 
+                            rstride=8, 
+                            cstride=8, 
+                            alpha=0.3)
             plt.xlabel('X axis (mm)')
             plt.ylabel('Y axis (mm)') #standard axis labelling
 #            plt.zlabel('B field (G)')

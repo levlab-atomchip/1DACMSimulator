@@ -12,7 +12,9 @@ class TestMeasurementFunctions(unittest.TestCase):
 
     def setUp(self):
         self.test_values = np.random.normal(0,1,10)
-        self.meas = Measurement.Measurement(np.mean(self.test_values), np.std(self.test_values, ddof = 1), len(self.test_values), "meters")
+        self.meas = Measurement.Measurement(np.mean(self.test_values), 
+                                            np.std(self.test_values, ddof = 1), 
+                                            len(self.test_values), "meters")
 
     def test_getval(self):
         # make sure the shuffled sequence does not lose any elements
@@ -30,7 +32,8 @@ class TestMeasurementFunctions(unittest.TestCase):
         new_test_values = np.append(self.test_values, observed_val)
         self.meas.update(observed_val)
         self.assertAlmostEqual(self.meas.getval(), np.mean(new_test_values))
-        self.assertAlmostEqual(self.meas.getunc(), np.std(new_test_values, ddof = 1))
+        self.assertAlmostEqual(self.meas.getunc(), 
+                               np.std(new_test_values, ddof = 1))
         self.assertEqual(self.meas.getnum(), len(new_test_values))
 
 

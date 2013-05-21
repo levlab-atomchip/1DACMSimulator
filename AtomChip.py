@@ -41,7 +41,8 @@ l_micro = 5e3
 l_arms = 4.5e3
 a = 2.5e3 #microns wire spacing, between central wire and integrated bias wires
 a_ax = 12.5e3 #microns wire spacing, between submerged longitudinal bias wires
-#sub = 1.7e3 #microns wire submersion, for longitudinal bias wires from ground plane to middle
+#sub = 1.7e3 #microns wire submersion, for 
+#longitudinal bias wires from ground plane to middle
 w_rad = 1587 #wire width, microns; 1/16"
 w_ax = 1191 #microns; 3/64"
 w_dimple = 1191 #microns; 3/64"
@@ -72,7 +73,8 @@ I_dimple =0
 I_micro_trap = 0
 I_micro_arm = 0
 I_micro_dimple = 0
-# I_out = 1.02*[((h_rad/2 + h)^2 + a^2)/(2*h + h_rad)]*[I_in/(h + h_rad/2) + (I_micro_trap)/(h - chip_height)] #Use when microwires are included
+# I_out = 1.02*[((h_rad/2 + h)^2 + a^2)/(2*h + h_rad)]*[I_in/(h + h_rad/2) 
+#+ (I_micro_trap)/(h - chip_height)] #Use when microwires are included
 
 #These should be altered to match the output of the script, and iterated
 #until input and output converge.

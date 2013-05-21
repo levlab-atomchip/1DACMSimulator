@@ -16,7 +16,15 @@ class TestHWireFunctions(unittest.TestCase):
         self.wirelength = 1000
         self.testdist = .1
         self.current = 1
-        self.hwire = acwires.HWire('test hwire', self.wirelength, .001, .001, self.current, 1, 0, 0, 0)
+        self.hwire = acwires.HWire('test hwire', 
+                                   self.wirelength, 
+                                   .001, 
+                                   .001, 
+                                   self.current, 
+                                   1, 
+                                   0, 
+                                   0, 
+                                   0)
 
     def test_bfield(self):
         bfield = self.hwire.bfieldcalc(self.wirelength / 2, 0, self.testdist)

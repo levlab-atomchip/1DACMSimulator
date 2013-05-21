@@ -5,14 +5,6 @@ Created on Sun May 19 15:15:38 2013
 @author: Will
 """
 
-#namedtuple('ImagingBeam',['wavelength','intensity','linewidth', 'angle', 'focus','waist'])
-#''' wavelength / nm
-#    intensity / W/m2
-#    linewidth / Mhz
-#    angle / radian, from mirror plane
-#    focus / um, from atom cloud?
-#    waist / um '''
-    
 from acmconstants import C
 from math import pi, sqrt, exp
 from Window import window 

@@ -21,10 +21,11 @@ import ImagingBeam
 import CCD
 import ImagingSystem
 import AtomDensity
-import AtomImage
+#import AtomImage
+from AtomImage import DigitalImage, Image
 import matplotlib.pyplot as plt
 from Window import window
-from acmconstants import *
+from acmconstants import NUM_PIXELS, OMEGA_RES, ISAT, SIGMA_0, CLOUD_THICKNESS
 import numpy as np
 from math import pi
     
@@ -42,8 +43,10 @@ class BField: pass
 class ACMSimulator:
     def __init__(self):
         self.atom_density = AtomDensity.AtomDensity(atom_tophat, 1e-6)
-        self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / OMEGA_RES), ISAT*0.01*pi*(500e-6)**2, 10e6, 0, 0, 500e-6)
-        self.ccd = CCD.CCD(NUM_PIXELS, (window.max - window.min) / NUM_PIXELS, 10, 0.07)
+        self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / OMEGA_RES), 
+                                ISAT*0.01*pi*(500e-6)**2, 10e6, 0, 0, 500e-6)
+        self.ccd = CCD.CCD(NUM_PIXELS, 
+                           (window.max - window.min) / NUM_PIXELS, 10, 0.07)
         self.imaging_system = ImagingSystem.ImagingSystem()
     
     def simulate(self):
@@ -70,7 +73,7 @@ class ACMSimulator:
         plt.title('Atom Density')
         plt.show()
     def plot_absorption_image(self):
-        light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
+        light_image = Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
         abs_image = np.log(digital_light_image.get_image_arr() / 
             self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS)
@@ -78,20 +81,20 @@ class ACMSimulator:
         plt.title('Absorption Image')
         plt.show()
     def plot_error(self):
-        light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
+        light_image = Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
-        abs_image = AtomImage.DigitalImage(np.log(digital_light_image.get_image_arr() / 
-            self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS), self.ccd)
+        abs_image = DigitalImage(np.log(digital_light_image.get_image_arr() / 
+            self.digital_image.get_image_arr()) / (SIGMA_0 * CLOUD_THICKNESS),
+                                self.ccd)
 #        window_res = (window.max - window.min) / window.num_cells)
         analog_abs_image = abs_image.get_analog((window.max - window.min)
                                                 / window.num_cells)
 #        print analog_abs_image.get_image_arr()
-#        abs_image = np.log(self.imaging_beam.get_slice(0) / self.atom_image.image) / (SIGMA_0 * CLOUD_THICKNESS)
-        error = np.abs((analog_abs_image.get_image_arr() - self.atom_density.get_density()) 
-                                    / self.atom_density.get_density())
+        error = np.abs((analog_abs_image.get_image_arr() 
+                        - self.atom_density.get_density()) 
+                        / self.atom_density.get_density())
         plt.plot(window.window, error)
 #        plt.plot(window.window, self.atom_density.get_density())
-#        plt.scatter(np.linspace(window.min, window.max, NUM_PIXELS), abs_image)
         plt.title('error')
         plt.show()
         

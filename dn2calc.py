@@ -36,7 +36,11 @@ sigma = sigma0 / (1 + 4*(delta / Gamma)**2 + I / Isat)
 n = D / sigma
 
 
-dn2 = (dIl / (sigma * (Il - Id)))**2 + ((Il - Ia)*dId / (sigma * (Il - Id) * (Ia - Id)))**2 + (dIa / (sigma * (Ia - Id)))**2 + (8 * sigma * n * delta *domega_l/ (sigma0 * Gamma**2))**2 + (sigma * n * dIl / (sigma0 * Isat))**2
+dn2 = ((dIl / (sigma * (Il - Id)))**2 
+    + ((Il - Ia)*dId / (sigma * (Il - Id) * (Ia - Id)))**2 
+    + (dIa / (sigma * (Ia - Id)))**2 
+    + (8 * sigma * n * delta *domega_l/ (sigma0 * Gamma**2))**2 
+    + (sigma * n * dIl / (sigma0 * Isat))**2)
 dn = sqrt(dn2)
 
 N = n * voxel_area
