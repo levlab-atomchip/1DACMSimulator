@@ -42,7 +42,7 @@ from math import pi, sqrt
 clear = "\n"*100
 
 #Simulation Mode
-fieldplot = 0
+fieldplot = 1
 plotxz = 0
 
 ## Plot parameters
@@ -194,22 +194,27 @@ if fieldplot == 1:
         B_tot = np.zeros(x.shape)
         npoints = B_tot.size
         npoints_complete = 0
-        for coords in np.ndenumerate(x):
-            print clear
-            print "%2.0f percent complete"%(100*npoints_complete/npoints)
+        for coords in np.ndenumerate(x):    
 #            print coords
 #            print x[coords][1]
 #            print coords[1]
 #            print y[coords][1]
 #            print y[coords[0]]
             tot_field = np.array((0,0,0))
+            i = 1
+            num_wires = len(WireSpecs.allwires)
             for wire in WireSpecs.allwires:
+                print clear
+                print "%d of %d points complete\n"%(npoints_complete, npoints)
+                print "%2.3f percent complete"%(100.0*npoints_complete/npoints)
+                print "Wire %d of %d"%(i, num_wires)
+                i += 1
                 tot_field += wire.bfieldcalc(coords[1], 
                                               y[coords[0]], 
                                                 z_trap)
             tot_field_norm = np.linalg.norm(tot_field + B_bias)
             B_tot[coords[0]] = (tot_field_norm 
-                                - (0,0,(m_Rb87 * g)/(mu_B) * z_trap)) 
+                                - (m_Rb87 * g)/(mu_B) * z_trap) 
                                 #gravity correction
             npoints_complete += 1
         print B_tot

@@ -25,7 +25,8 @@ import AtomDensity
 from AtomImage import DigitalImage, Image
 import matplotlib.pyplot as plt
 from Window import window
-from acmconstants import NUM_PIXELS, OMEGA_RES, ISAT, SIGMA_0, CLOUD_THICKNESS
+from acmconstants import NUM_PIXELS, OMEGA_RES, C
+from acmconstants import ISAT, SIGMA_0, CLOUD_THICKNESS
 import numpy as np
 from math import pi
     
