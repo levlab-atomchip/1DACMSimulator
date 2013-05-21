@@ -40,6 +40,7 @@ M = 87 * 1.7e-27 #kg
 CLOUD_THICKNESS = 1e-6
 BG_NOISE_CURRENT = 30
 
+
 # Camera Properties
 # PIXIS 1024BR
 PIXEL_SIZE = 13e-6 #m
