@@ -78,7 +78,10 @@ class ACMSimulator:
         plt.title('Absorption Image')
         plt.show()
     def plot_error(self):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 141f3f5e98123d92404dfd6f47bd09c647093dce
         light_image = AtomImage.Image(self.imaging_beam.get_slice(0), window)
         digital_light_image = self.ccd.image(light_image, 1e-3)
         abs_image = np.log(digital_light_image.get_image_arr() / 
