@@ -31,6 +31,7 @@ SIGMA_0 = 1.356e-13 #m^2, resonant x section
 # Rb87 Properties
 A = 5.2e-9 #m, scattering length
 M = 87 * 1.7e-27 #kg
+G = (4 * pi * HBAR**2 * A) / M
 
 # Dy Properties
 #A = 100 * A_0
