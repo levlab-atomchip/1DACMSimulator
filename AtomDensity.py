@@ -4,7 +4,7 @@ Created on Sun May 19 15:35:06 2013
 
 @author: Will
 """
-from Window import *
+from Window import window
 
 class AtomDensity:
     ''' 1D array of atom column density in trap '''

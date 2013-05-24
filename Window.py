@@ -17,10 +17,17 @@ wmax = wmax * 1e-6 #m
 
 
 
-Window = namedtuple('Window', ['min','max','num_cells', 'window'])
+# Window = namedtuple('Window', ['min','max','num_cells', 'window'])
 
-window = Window(wmin, wmax, wnum, np.linspace(wmin, wmax, wnum))
+# window = Window(wmin, wmax, wnum, np.linspace(wmin, wmax, wnum))
 
-#class Window():
-#    def __init__(self):
-#        pass
+class Window():
+   def __init__(self, xmin, xmax, num_cells):
+       self.xmin = xmin
+	   self.xmax = xmax
+	   self.num_cells = num_cells
+	   
+	   self.window = np.linspace(wmin, wmax, wnum)
+	   self.cell_size = (self.xmax - self.xmin) / self.num_cells
+	   
+window = Window(wmin, wmax, wnum)
