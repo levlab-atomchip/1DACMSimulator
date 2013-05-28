@@ -32,7 +32,8 @@ from math import pi
 
 # Some test profiles
 atom_linear = np.array([3e10*i for i in range(len(window.window))])
-atom_tophat = np.array([30.0/window.cell_size**3 for i in range(len(window.window))])
+atom_tophat = np.array([0.1/window.cell_size**3 
+                        for i in range(len(window.window))])
 atom_tophat[0:512] = 1
 atom_tophat[1536:] = 1
 
@@ -44,9 +45,16 @@ class BField: pass
        
 class ACMSimulator:
     def __init__(self):
-        self.atom_density = AtomDensity.AtomDensity(atom_tophat, 1e-6)
-        self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / (OMEGA_RES + LINEWIDTH_RES)), ISAT*0.01*pi*(500e-6)**2, 10e6, 0, 0, 500e-6)
-        self.ccd = CCD.CCD(NUM_PIXELS, (window.xmax - window.xmin) / NUM_PIXELS, 10, 0.07)
+        self.atom_density = AtomDensity.AtomDensity(atom_tophat, 100e-9)
+        self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / (OMEGA_RES)), 
+                                                    ISAT*0.1*pi*(500e-6)**2, 
+                                                    10e6, 
+                                                    0, 
+                                                    0, 
+                                                    500e-6)
+        self.ccd = CCD.CCD(NUM_PIXELS, (window.xmax - window.xmin) / NUM_PIXELS, 
+                                       10, 
+                                       0.07)
         self.imaging_system = ImagingSystem.ImagingSystem()
     
     def simulate(self):
@@ -56,7 +64,7 @@ class ACMSimulator:
 #                         + self.atom_chip.get_field(self.window))
 #        perturbed_cloud = self.atom_density.mag_potential(perturbed_field)
 #        self.perturbed_cloud = self.atom_density.harmonicBEC(2e3, 10)
-        self.perturbed_cloud = self.atom_density.harmonicThermal(2e3, 10)
+        self.perturbed_cloud = self.atom_density.harmonicThermal(2e3, 100)
 #        self.perturbed_cloud = self.atom_density
         self.atom_image = self.imaging_beam.image_atoms(self.perturbed_cloud)
         focused_image = self.imaging_system.image(self.atom_image)
@@ -97,7 +105,7 @@ class ACMSimulator:
         analog_abs_image = abs_image.get_analog((window.xmax - window.xmin)
                                                 / window.num_cells)
 #        print analog_abs_image.get_image_arr()
-        error = np.abs((analog_abs_image.get_image_arr() 
+        error = np.abs((analog_abs_image.get_image_arr() * SIGMA_0 / self.imaging_beam.sigma()
                         - self.perturbed_cloud.get_density()) 
                         / self.perturbed_cloud.get_density())
         plt.plot(window.window, error)

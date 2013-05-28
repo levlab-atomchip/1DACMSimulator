@@ -61,7 +61,7 @@ class DigitalImage(Image):
                 logging.debug('pixel change')
 #                print "pixel change"
                 analog_arr.append(self.image_arr[pixel])
-        analog_image = Image(analog_arr, analog_window)
+        analog_image = Image(np.array(analog_arr), analog_window)
         return analog_image
     def get_CCD(self):
         return self.CCD

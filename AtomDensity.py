@@ -38,7 +38,7 @@ class AtomDensity:
         w_perp2 = (2 * K_B * self.temperature / (M * omega_perp**2))
         w_long2 = (2 * K_B * self.temperature / (M * omega_long**2))
         n_0 = self.N_total / (pi**1.5 * w_perp2 * w_long2**0.5)
-        harmonicThermal_density = np.array([n_0 * exp(-1 * x**2 / w_long2)
+        harmonicThermal_density = np.array([n_0 * pi * w_perp2 * exp(-1 * x**2 / w_long2)
                                         / window.cell_size**2
                                         for x in window.window])
         return AtomDensity(harmonicThermal_density, self.temperature)
