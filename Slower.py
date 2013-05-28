@@ -7,6 +7,7 @@ Created on Sun May 19 15:13:50 2013
 
 from acmconstants import MU_B, HBAR
 from math import sqrt
+import matplotlib.pylab as plt
 
 class Slower():
     pass
@@ -53,7 +54,7 @@ class BasicZS(ZeemanSlower):
 		v_r = v_0 * sqrt( 1 - z / self.z_0)
 		return v_ss_prime + v_r
 	def plot_vss(self, window):
-		vss = [get_vss(z) for z in window.window]
+		vss = [self.get_vss(z) for z in window.window]
 		plt.plot(window.window, vss)
 		plt.xlabel('Position')
 		plt.ylabel('Steady-State Velocity')

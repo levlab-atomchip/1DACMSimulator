@@ -15,6 +15,7 @@ HBAR = 1.05457e-34 # J*sec
 MU_B = 9.274e-24 # J/T
 A_0 = 5.29e-11 #m, Bohr radius
 MU_0 = 4*pi*1e-7
+K_B = 1.38e-23 #J/K, boltzmann constant
 
 
 ## Imaging Transition Properties

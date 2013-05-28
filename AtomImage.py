@@ -4,9 +4,11 @@ Created on Sun May 19 15:29:28 2013
 
 @author: Will
 """
-
+import logging
 from Window import Window
 import numpy as np
+
+#logging.basicConfig(level = logging.DEBUG)
 
 class Image():
     def __init__(self, image_arr, window):
@@ -38,18 +40,25 @@ class DigitalImage(Image):
         window = np.arange(wmin, wmax, analog_resolution)
         analog_window = Window(wmin, wmax, len(window))
 #        print len(window)
+        logging.debug('Window Length is: %d'%len(window))
+        logging.debug('CCD pixel size is: %f'%self.CCD.pixel_size)
 #        print self.CCD.pixel_size
         pixel = 0
         analog_arr = []
         for cell in analog_window.window:
+            logging.debug('pixel       %d'%pixel)
+            logging.debug('cell        %f'%cell)
+            logging.debug('window cell %f'%self.window.window[pixel])
 #            print "pixel %d"%pixel
 #            print cell
 #            print self.window.window[pixel]
             if (self.window.window[pixel] + self.CCD.pixel_size) > cell:
                 analog_arr.append(self.image_arr[pixel])
+                logging.debug('no pixel change')
 #                print "no pixel change"
             else:
                 pixel += 1
+                logging.debug('pixel change')
 #                print "pixel change"
                 analog_arr.append(self.image_arr[pixel])
         analog_image = Image(analog_arr, analog_window)

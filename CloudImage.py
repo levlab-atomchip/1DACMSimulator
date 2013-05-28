@@ -45,7 +45,8 @@ class cloud_image():
         self.CurrContPar = self.runDataFiles[0,0][12][0]
         self.CurrTOF = self.runDataFiles[0,0][13][0]
         
-        self.atomImage = scipy.array(self.imageArray[:,:,0]) #scipy.array is called to make a copy, not a reference
+        self.atomImage = scipy.array(self.imageArray[:,:,0]) 
+        #scipy.array is called to make a copy, not a reference
         self.lightImage = scipy.array(self.imageArray[:,:,1])
         self.darkImage = scipy.array(self.imageArray[:,:,2])
 
@@ -56,12 +57,17 @@ class cloud_image():
         self.s_lambda = self.hfig_main[0][0][85][0][0][11]
         self.A = self.hfig_main[0][0][85][0][0][10]
 
-        self.truncWinX =  self.hfig_main[0][0][85][0][0][7] #We really only need two numbers, not the whole list
+        self.truncWinX =  self.hfig_main[0][0][85][0][0][7] 
+        #We really only need two numbers, not the whole list
         self.truncWinY =  self.hfig_main[0][0][85][0][0][8]
 
-        self.atomImage_trunc = self.atomImage[self.truncWinY[0,0]:self.truncWinY[0,-1],self.truncWinX[0,0]:self.truncWinX[0,-1]] #Do we really want to carry these around?
-        self.lightImage_trunc = self.lightImage[self.truncWinY[0,0]:self.truncWinY[0,-1],self.truncWinX[0,0]:self.truncWinX[0,-1]]
-        self.darkImage_trunc = self.darkImage[self.truncWinY[0,0]:self.truncWinY[0,-1],self.truncWinX[0,0]:self.truncWinX[0,-1]]
+        self.atomImage_trunc = self.atomImage[self.truncWinY[0,0]:self.truncWinY[0,-1],
+                                              self.truncWinX[0,0]:self.truncWinX[0,-1]] 
+                                              #Do we really want to carry these around?
+        self.lightImage_trunc = self.lightImage[self.truncWinY[0,0]:self.truncWinY[0,-1],
+                                                self.truncWinX[0,0]:self.truncWinX[0,-1]]
+        self.darkImage_trunc = self.darkImage[self.truncWinY[0,0]:self.truncWinY[0,-1],
+                                              self.truncWinX[0,0]:self.truncWinX[0,-1]]
         return
 
 
@@ -94,7 +100,10 @@ class cloud_image():
         return [array[idx],idx]
 
     def getODImage(self):
-        ODImage = abs(np.log((self.atomImage_trunc - self.darkImage_trunc).astype(float)/(self.lightImage_trunc - self.darkImage_trunc).astype(float)))
+        ODImage = abs(np.log((self.atomImage_trunc 
+                            - self.darkImage_trunc).astype(float)
+                            /(self.lightImage_trunc 
+                            - self.darkImage_trunc).astype(float)))
         ODImage[np.isnan(ODImage)] = 0
         ODImage[np.isinf(ODImage)] = ODImage[~np.isinf(ODImage)].max()
         return ODImage
@@ -110,7 +119,8 @@ class cloud_image():
     def gaussian2D(self,xdata, A_x,mu_x,sigma_x,A_y,mu_y,sigma_y,offset):
         x = xdata[0]
         y = xdata[1]
-        return A_x*np.exp(-1.*(x-mu_x)**2./(2.*sigma_x**2.)) + A_y*np.exp(-1.*(x-mu_y)**2./(2.*sigma_y**2.)) + offset
+        return (A_x*np.exp(-1.*(x-mu_x)**2./(2.*sigma_x**2.)) 
+        + A_y*np.exp(-1.*(x-mu_y)**2./(2.*sigma_y**2.)) + offset)
     
     def fitGaussian1D(self,image): #fits a 1D Gaussian to a 1D image
         max_value = image.max()
@@ -130,7 +140,9 @@ class cloud_image():
         y_coefs= self.fitGaussian1D(img_y)
         x,y = np.meshgrid(np.arange(img_x.size),np.arange(img_y.size))
 
-        coef, outmat = curve_fit(self.gaussian2D,[x,y],image,p0 =np.delete(np.append(x_coefs,y_coefs),3))
+        coef, outmat = curve_fit(self.gaussian2D,[x,y],
+                                 image,
+                                 p0 =np.delete(np.append(x_coefs,y_coefs),3))
         return coef
 
     def getDensity1D(self,image):
@@ -139,6 +151,7 @@ class cloud_image():
     def getBField(self,m_F = 2):
         image_1D = np.sum(self.getODImage(),0)
         density = self.getDensity1D(image_1D)
+        # This looks wrong, a sensitivity rather than a local B field
         return 2*hbar*self.p.w_tr*self.p.a_s/(m_F*self.p.g_F*self.p.mu_0)*density
 
     def getContParam(self):

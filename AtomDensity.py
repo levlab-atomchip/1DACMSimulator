@@ -5,9 +5,10 @@ Created on Sun May 19 15:35:06 2013
 @author: Will
 """
 from Window import window
-from acmconstants import M, G, HBAR, A
-from math import pi
+from acmconstants import M, G, HBAR, A, K_B
+from math import pi, exp
 import numpy as np
+import logging
 
 class AtomDensity:
     ''' 1D array of atom column density in trap '''
@@ -24,11 +25,20 @@ class AtomDensity:
     def harmonicBEC(self, omega_perp, omega_long):
         mu = (G * (15 / pi)**0.4 * (0.5)**(9.0 / 5.0) * (M / G)**0.6 * 
             self.N_total**0.4 * (omega_perp**2 * omega_long)**0.4)
-        print "mu = %s"%mu
-        print self.N_total
-        print window.cell_size
-        harmonic_density = np.array([(((mu - 0.5 * M * omega_long**2 * x**2) 
+        logging.debug("mu = %s"%mu)
+        logging.debug('N = %d'%self.N_total)
+        logging.debug('cell size = %f'%window.cell_size)
+        harmonicBEC_density = np.array([(((mu - 0.5 * M * omega_long**2 * x**2) 
                                     / (HBAR * omega_perp))**2 - 1) 
                                     / (4 * A * window.cell_size**2) 
                                     for x in window.window])
-        return AtomDensity(harmonic_density, self.temperature)
+        return AtomDensity(harmonicBEC_density, self.temperature)
+        
+    def harmonicThermal(self, omega_perp, omega_long):
+        w_perp2 = (2 * K_B * self.temperature / (M * omega_perp**2))
+        w_long2 = (2 * K_B * self.temperature / (M * omega_long**2))
+        n_0 = self.N_total / (pi**1.5 * w_perp2 * w_long2**0.5)
+        harmonicThermal_density = np.array([n_0 * exp(-1 * x**2 / w_long2)
+                                        / window.cell_size**2
+                                        for x in window.window])
+        return AtomDensity(harmonicThermal_density, self.temperature)

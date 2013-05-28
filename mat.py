@@ -80,7 +80,7 @@ class ssft():
 
         
 if __name__ == '__main__':
-    p = parameters.tp_parameters()
+    p = parameters_KrisB.tp_parameters()
     N = 201
     omega = 2*pi*100
 

@@ -23,11 +23,13 @@ class field_map():
         return
 
     def fillImages(self):
-        self.cloud_images = [CloudImage.cloud_image(i) for i in self.image_files]
+        self.cloud_images = [CloudImage.cloud_image(i) 
+                                for i in self.image_files]
         return
 
     def getVariableList(self):
-        return [i.getVariableValues(i.getVariablesFile(),'Variables.m') for i in self.cloud_images]
+        return [i.getVariableValues(i.getVariablesFile(),'Variables.m') 
+                    for i in self.cloud_images]
 
     def checkSet(self):
         #return true if all images in field_map have same variables.m file
@@ -35,19 +37,25 @@ class field_map():
         return all(i == var_list[0] for i in var_list) 
 
     def fillField(self):
-        #Right now we just return a dictionary, when we know the control parameters we can organize this in a 2D array
+        #Right now we just return a dictionary, when we know the 
+        #control parameters we can organize this in a 2D array
         field_dict = {}
         for i in self.cloud_images:
             field_dict[i.getContParam()] = i.getBField()
         return field_dict
 
-    def filterFunction(self,k_x,k_y,c_x = 0.32e6,c_y=0.22e6,s_x=0.05e6,s_y = 0.05e-6):
+    def filterFunction(self,k_x,k_y,
+                       c_x = 0.32e6,
+                       c_y=0.22e6,
+                       s_x=0.05e6,
+                       s_y = 0.05e-6):
         return (1+scipy.exp((k_x-c_x)/s_x))*(1+scipy.exp((k_y-c_y)/s_y))
 
     def getJ(self):
         bfield = self.fillField()
 
-        bimg = scipy.misc.imread('/Users/Pants/Desktop/Play Time/bfield.png',flatten=True)
+        bimg = scipy.misc.imread('/Users/Pants/Desktop/Play Time/bfield.png',
+                                 flatten=True)
         bfield = bimg/bimg.max() *300e-9
         
         #k_x1 = 2*pi*scipy.fftpack.fftfreq(bfield.shape[1], self.cloud_images[0].c1) ## k-grid

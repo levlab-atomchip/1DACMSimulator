@@ -55,7 +55,8 @@ class ACMSimulator:
 #        perturbed_field = (self.current_slab.get_field(self.window) 
 #                         + self.atom_chip.get_field(self.window))
 #        perturbed_cloud = self.atom_density.mag_potential(perturbed_field)
-        self.perturbed_cloud = self.atom_density.harmonicBEC(2e3, 10)
+#        self.perturbed_cloud = self.atom_density.harmonicBEC(2e3, 10)
+        self.perturbed_cloud = self.atom_density.harmonicThermal(2e3, 10)
 #        self.perturbed_cloud = self.atom_density
         self.atom_image = self.imaging_beam.image_atoms(self.perturbed_cloud)
         focused_image = self.imaging_system.image(self.atom_image)
