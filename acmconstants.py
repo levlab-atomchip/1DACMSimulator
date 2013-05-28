@@ -6,6 +6,7 @@ Created on Thu May 02 21:43:22 2013
 """
 
 from math import pi
+from Window import window
 
 # Physical Constants, from Steck Rb87 Alkali D Line Data
 C = 2.99792e8 # m/s (exact)
@@ -38,11 +39,12 @@ G = (4 * pi * HBAR**2 * A) / M
 #M = 162.5 * 1.7e-27
 #MU_B = 10* 9.274e-24
 
-CLOUD_THICKNESS = 1e-6
+CLOUD_THICKNESS = window.cell_size
 BG_NOISE_CURRENT = 30 #e/p/s
 
 # Camera Properties
 # PIXIS 1024BR
-PIXEL_SIZE = 13e-6 #m
+#PIXEL_SIZE = 13e-6 #m
+PIXEL_SIZE = 100e-6 / 1024
 NUM_PIXELS = 1024
 DARK_CURRENT = .07 #e/p/s

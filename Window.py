@@ -10,6 +10,8 @@ import numpy as np
 
 wmin = -50 #um
 wmax = 50 #um
+#wmin = -13 * 512
+#wmax = 13 * 512
 wnum = 2048
 
 wmin = wmin * 1e-6 #m
@@ -24,10 +26,9 @@ wmax = wmax * 1e-6 #m
 class Window():
    def __init__(self, xmin, xmax, num_cells):
        self.xmin = xmin
-	   self.xmax = xmax
-	   self.num_cells = num_cells
-	   
-	   self.window = np.linspace(wmin, wmax, wnum)
-	   self.cell_size = (self.xmax - self.xmin) / self.num_cells
+       self.xmax = xmax
+       self.num_cells = num_cells
+       self.window = np.linspace(xmin, xmax, num_cells)
+       self.cell_size = (self.xmax - self.xmin) / self.num_cells
 	   
 window = Window(wmin, wmax, wnum)

@@ -23,7 +23,7 @@ class CCD():
     def image(self, analog_image, exposure_time):
         ''' produce a DigitalImage from an AtomImage '''
 
-        image_res = (window.max - window.min) / window.num_cells #m
+        image_res = (window.xmax - window.xmin) / window.num_cells #m
         pts_per_pix = int(self.pixel_size / image_res)
 
         signal = analog_image.get_image_arr()

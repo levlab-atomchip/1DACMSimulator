@@ -5,7 +5,7 @@ Created on Sat Apr 27 18:38:52 2013
 @author: Will
 """
 
-from acmconstants import G1, ALPHA, D12, G2, C, 
+from acmconstants import G1, ALPHA, D12, G2, C
 from acmconstants import HBAR, OMEGA_RES, LINEWIDTH_RES, CLOUD_THICKNESS
 from math import pi
 #import ImagingBeam
@@ -27,9 +27,9 @@ def atom_light_interaction(imaging_beam, atom_density):
 #    print 'A21:'
 #    print A21
     
-    abs_x_section = (3 * pi**2 * C**2 * A21 * 
+    abs_x_section = ((3 * pi**2 * C**2 * A21 * 
                     gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)) 
-                    / (OMEGA_RES**2)
+                    / (OMEGA_RES**2))
 #    print 'lineshape factor:'
 #    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
 #    print 'x_section:'
@@ -45,15 +45,15 @@ def atom_light_interaction(imaging_beam, atom_density):
 #    plt.plot(window.window, abs_x_section_eff)
 #    plt.title('abs_x_section_eff')
 #    plt.show()
-    optical_density = abs_x_section_eff * atom_density.get_density()
+    optical_density = abs_x_section_eff * atom_density.get_density() * window.cell_size
     I_f = I_0 * np.exp(-1*optical_density)
 #    print 'I_0:'
 #    print I_0
 #    plt.plot(window.window, I_0)
 #    plt.title('I_0')
 #    plt.show()
-    print 'OD:'
-    print optical_density
+#    print 'OD:'
+#    print optical_density
 #    plt.plot(window.window, optical_density)
 #    plt.title('OD')
 #    plt.show()

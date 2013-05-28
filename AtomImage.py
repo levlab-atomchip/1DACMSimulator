@@ -30,22 +30,27 @@ class DigitalImage(Image):
         wmin = -0.5 * CCD.length
         wmax = 0.5 * CCD.length
         wnum = CCD.num_pixel
-        Image.__init__(self, image_arr, Window(wmin, wmax, wnum, 
-                                         np.linspace(wmin, wmax, wnum)))
+        Image.__init__(self, image_arr, Window(wmin, wmax, wnum))
         self.CCD = CCD
     def get_analog(self, analog_resolution):
         wmin = -0.5 * self.CCD.length
         wmax = 0.5 * self.CCD.length
         window = np.arange(wmin, wmax, analog_resolution)
-        analog_window = Window(wmin, wmax, len(window), window)
+        analog_window = Window(wmin, wmax, len(window))
+#        print len(window)
+#        print self.CCD.pixel_size
         pixel = 0
         analog_arr = []
         for cell in analog_window.window:
-            print "pixel %d"%pixel
+#            print "pixel %d"%pixel
+#            print cell
+#            print self.window.window[pixel]
             if (self.window.window[pixel] + self.CCD.pixel_size) > cell:
                 analog_arr.append(self.image_arr[pixel])
+#                print "no pixel change"
             else:
                 pixel += 1
+#                print "pixel change"
                 analog_arr.append(self.image_arr[pixel])
         analog_image = Image(analog_arr, analog_window)
         return analog_image
