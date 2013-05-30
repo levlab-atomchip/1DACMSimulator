@@ -105,7 +105,8 @@ class ACMSimulator:
         analog_abs_image = abs_image.get_analog((window.xmax - window.xmin)
                                                 / window.num_cells)
 #        print analog_abs_image.get_image_arr()
-        error = np.abs((analog_abs_image.get_image_arr() * SIGMA_0 / self.imaging_beam.sigma()
+        error = np.abs((analog_abs_image.get_image_arr() * SIGMA_0 
+        / self.imaging_beam.sigma()
                         - self.perturbed_cloud.get_density()) 
                         / self.perturbed_cloud.get_density())
         plt.plot(window.window, error)

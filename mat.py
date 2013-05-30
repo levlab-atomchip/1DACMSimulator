@@ -4,6 +4,7 @@ import scipy
 import parameters_KrisB
 import scipy.fftpack
 import pylab
+import logging
 
 from scipy.constants import pi,hbar
 
@@ -14,7 +15,11 @@ class ssft():
         # computational cell
         self.lx = lx
         self.steps = steps
-        self.x,self.dx = scipy.linspace(-self.lx/2.,self.lx/2.,self.steps,endpoint=False,retstep=True)
+        self.x,self.dx = scipy.linspace(-self.lx/2.,
+                                        self.lx/2.,
+                                        self.steps,
+                                        endpoint=False,
+                                        retstep=True)
         self.dk =  2*pi/self.lx
         self.k = 2*pi*scipy.fftpack.fftfreq(len(self.x), self.dx) ## k-grid
 
@@ -34,7 +39,12 @@ class ssft():
     def interaction(self,psi):
         return 4*pi*hbar**2*self.p.a1d*2**.5/(self.p.m)*scipy.absolute(psi)**2
 
-    def ssft(self, potential, dt=-.1j*50e-6,max_its = 10000, start_psi = None, precision= 1e-8):
+    def ssft(self, 
+             potential, 
+             dt=-.1j*50e-6,
+             max_its = 10000, 
+             start_psi = None, 
+             precision= 1e-8):
         self.dt = dt
         ## kinetic energy part
         self.T = hbar**2*self.k**2/(2*self.p.m)
@@ -74,7 +84,7 @@ class ssft():
         psik *= self.exp_T
         psi = scipy.fftpack.ifft(psik)
         if (i == max_its-1)*(precision != None):
-            print 'warning: algorithm did not converge!'
+            logging.warning('warning: algorithm did not converge!')
         return self.Normalize(psi)
 
 
