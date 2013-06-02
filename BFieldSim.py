@@ -35,7 +35,7 @@ from matplotlib import cm
 from AtomChip import *
 import numpy as np
 import acwires
-import WireSpecs
+import testwires as WireSpecs
 import matplotlib.pyplot as plt
 from math import pi, sqrt
 
@@ -58,11 +58,17 @@ xplot=0
 # plottop = a/50
 # plotbottom = -a/50
 
-resolution=a/50 # resolution of the plots, meters
-plotleft=-a_ax # boundary of plots, meters
-plotright=a_ax
-plottop = a
-plotbottom = -a
+#resolution=a/5 # resolution of the plots, meters
+#plotleft=-a_ax # boundary of plots, meters
+#plotright=a_ax
+#plottop = a
+#plotbottom = -a
+
+resolution=0.0001 # resolution of the plots, meters
+plotleft=-0.0025 # boundary of plots, meters
+plotright=0.0025
+plottop = 0.0025
+plotbottom = -0.0025
 
 #resolution=0.1 # resolution of the plots, meters
 #plotleft=-5 # boundary of plots, meters
@@ -99,6 +105,7 @@ plotbottom = -a
 if plotxz == 1:
     n = 100 #how many points to check
 #    z_range = np.zeros(2,n)
+    z = 1e-3
     z_range = np.linspace(z*.8,z*1.5,n) #meters
 else:
     n = 100
@@ -112,8 +119,11 @@ z_spacing = z_range[1]-z_range[0] #meters
 B_tot_trap = np.array([])
 B_bias = np.array((B_xbias, B_ybias, B_zbias))
 #print B_bias
-for ii in range(n):
-    tot_field = np.array((0,0,0))
+x_trap = 0
+y_trap = 0
+
+for ii in xrange(n):
+    tot_field = np.array((0.0,0.0,0.0))
     for wire in WireSpecs.allwires:
         if wire.current != 0:
 #            print wire.bfieldcalc(x_trap, y_trap, z_range[ii])
@@ -163,16 +173,24 @@ if fieldplot == 1:
         x, z = np.meshgrid(np.arange(plotleft, plotright, resolution), z_range)
         B_tot = np.zeros(x.shape)
         for coords in np.ndenumerate(x):
-            tot_field = np.array((0,0,0))
+            tot_field = np.array((0.0,0.0,0.0))
             for wire in WireSpecs.allwires:
-                tot_field += wire.bfieldcalc(x[coords][1], 
+                this_field = wire.bfieldcalc(x[coords[0]], 
                                              y_trap, 
-                                             z[coords][1])
+                                             z[coords[0]])
+#                print wire.name
+#                print this_field*1e4
+                tot_field += this_field
+#                print tot_field
+#            print coords[1]
+#            print z[coords[0]]
+#            print tot_field * 1e4
             tot_field_norm = np.linalg.norm(tot_field + B_bias)
-            B_tot[coords[0]] = (tot_field_norm 
-                                - (0,0,(m_Rb87 * g)/(mu_B) * z[coords][1]))
+            B_tot[coords[0]] = tot_field_norm
+#            B_tot[coords[0]] = (tot_field_norm 
+#                                - (m_Rb87 * g)/(mu_B) * z[coords][1])B_tot[coords[0] = tot_field_norm
 #        B_tot_grav_corr = B_tot - (m_Rb87 * g)/(mu_B) * z
-        
+        print B_tot
         
         fig = plt.figure()
         ax = fig.gca(projection='3d')
@@ -200,24 +218,27 @@ if fieldplot == 1:
 #            print coords[1]
 #            print y[coords][1]
 #            print y[coords[0]]
-            tot_field = np.array((0,0,0))
+            tot_field = np.array((0.0,0.0,0.0))
             i = 1
             num_wires = len(WireSpecs.allwires)
             for wire in WireSpecs.allwires:
-                print clear
-                print "%d of %d points complete\n"%(npoints_complete, npoints)
-                print "%2.3f percent complete"%(100.0*npoints_complete/npoints)
-                print "Wire %d of %d"%(i, num_wires)
+#                print clear
+#                print "%d of %d points complete\n"%(npoints_complete, npoints)
+#                print "%2.3f percent complete"%(100.0*npoints_complete/npoints)
+#                print "Wire %d of %d"%(i, num_wires)
                 i += 1
-                tot_field += wire.bfieldcalc(coords[1], 
+                this_field = wire.bfieldcalc(x[coords[0]], 
                                               y[coords[0]], 
                                                 z_trap)
+                tot_field += this_field
+#            print tot_field
             tot_field_norm = np.linalg.norm(tot_field + B_bias)
-            B_tot[coords[0]] = (tot_field_norm 
-                                - (m_Rb87 * g)/(mu_B) * z_trap) 
+            B_tot[coords[0]] = tot_field_norm
+#            B_tot[coords[0]] = (tot_field_norm 
+#                                - (m_Rb87 * g)/(mu_B) * z_trap) 
                                 #gravity correction
             npoints_complete += 1
-        print B_tot
+#        print B_tot
         
         
         
@@ -236,15 +257,15 @@ if fieldplot == 1:
         # The first part attempts to extract the transverse and longitudinal
         # frequencies by fitting to a paraboloid and extracting the principal values
         traploc = [x_ind, y_ind]
-        print traploc
-        print GGradBy
+#        print traploc
+#        print GGradBy
         a = abs(GGradBy[(traploc[0],traploc[1])])
         b = abs(.5*(GGradByx[(traploc[0],traploc[1])] 
                 + GGradBxy[(traploc[0],traploc[1])]))
         c = abs(GGradBx[(traploc[0],traploc[1])])
-        print a
-        print b
-        print c
+#        print a
+#        print b
+#        print c
         Principal_Matrix = np.array([[a, b], [b, c]])
         values, vectors = np.linalg.eig(Principal_Matrix)
         freqs = []
@@ -274,8 +295,8 @@ if fieldplot == 1:
         AC_trap_temp = (((f_z**2 * f_longitudinal)
                         /(f_rad_ODT**2 * f_ax_ODT))**(1/3)
                         * ODT_temp)
-        cloud_length = (2*1e6*(k_B * AC_trap_temp 
-                        / (m_Rb87 * omega_longitudinal**2))**.5) #microns
+#        cloud_length = (2*1e6*(k_B * AC_trap_temp 
+#                        / (m_Rb87 * omega_longitudinal**2))**.5) #microns
         cloud_width = (2*1e6*(k_B * AC_trap_temp 
                         / (m_Rb87 * omega_z**2))**.5) #microns
         

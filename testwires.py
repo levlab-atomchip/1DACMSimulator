@@ -5,7 +5,7 @@ Created on Tue Apr 23 22:46:12 2013
 @author: Will
 """
 
-from acwires import HWire, VWire, NWire
+from acwires import HWire, VWire, NWire, HThinWire, VThinWire
 
 from AtomChip import *
 
@@ -16,13 +16,11 @@ hwires = []
 vwires = []
 nwires = []
 
-hwires.append(HWire('Central Trapping Macrowire', l_trap, w_rad, h_rad, I_in, 
-                    n, -l_trap / 2, -w_rad/2, -h_rad))
+hwires.append(HThinWire('Central Test Wire', 1, 1e-6, 1e-6, 1, 
+                     -0.5, -0.5e-6, 0))
 
-vwires.append(VWire( 'Left Axial Bias Lead Macrowire',  
-                    20e-3,  w_ax,  3e-3,  
-                    I_ax,  n,  
-                    -a_ax/2-w_ax/2,  -25e-3,  -3.1e-3))
+vwires.append(VThinWire('Arm 1', 0.5, 1e-6, 1e-6, 1, -0.001, -0.5, 0))
+vwires.append(VThinWire('Arm 2', 0.5, 1e-6, 1e-6, 1,  0.001, 0, 0))
 
 allwires = hwires + vwires + nwires
 
