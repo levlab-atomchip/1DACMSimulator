@@ -14,7 +14,7 @@ class field_map():
         self.height = height
         self.file_dir = file_dir
         self.image_files = []
-        self.cloud_images = []
+        self.CloudImages = []
         self.getFiles()
         self.fillImages()
         
@@ -23,7 +23,7 @@ class field_map():
         return
 
     def fillImages(self):
-        self.cloud_images = [CloudImage.cloud_image(i) 
+        self.cloud_images = [CloudImage.CloudImage(i) 
                                 for i in self.image_files]
         return
 

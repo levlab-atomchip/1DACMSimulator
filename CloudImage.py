@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 from scipy.constants import pi, hbar
 import numpy as np
 
-class cloud_image():
+class CloudImage():
     def __init__(self,fileName,p=None):
         if p==None:
             self.p = parameters.bfield_parameters()
@@ -69,6 +69,11 @@ class cloud_image():
         self.darkImage_trunc = self.darkImage[self.truncWinY[0,0]:self.truncWinY[0,-1],
                                               self.truncWinX[0,0]:self.truncWinX[0,-1]]
         return
+    
+    def truncate_image(self, x1, x2, y1, y2):
+        self.atomImage_trunc = self.atomImage[y1:y2,x1:x2]
+        self.lightImage_trunc = self.lightImage[y1:y2,x1:x2]
+        self.darkImage_trunc = self.darkImage[y1:y2,x1:x2]
 
 
     def getVariablesFile(self):
@@ -120,7 +125,7 @@ class cloud_image():
         x = xdata[0]
         y = xdata[1]
         return (A_x*np.exp(-1.*(x-mu_x)**2./(2.*sigma_x**2.)) 
-        + A_y*np.exp(-1.*(x-mu_y)**2./(2.*sigma_y**2.)) + offset)
+        + A_y*np.exp(-1.*(y-mu_y)**2./(2.*sigma_y**2.)) + offset)
     
     def fitGaussian1D(self,image): #fits a 1D Gaussian to a 1D image
         max_value = image.max()
