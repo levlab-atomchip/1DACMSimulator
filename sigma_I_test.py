@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.constants import pi, hbar, alpha, c
-from acmconstants import OMEGA_RES, LINEWIDTH_RES, G1, D12, G2
+from acmconstants import OMEGA_RES, LINEWIDTH_RES, SIGMA_0, I_SAT
 import logging
 
 ms = 1e-3
@@ -21,11 +21,14 @@ uW = 1e-6
 test_image = CloudImage('test_image_recent.mat')
 omega = OMEGA_RES
 
+test_image.truncate_image(400,1000, 0, 500) #empirical, image-specific
+
 raw_atom_number = test_image.getAtomNumber()[0][0]
 print 'Atom Number: %d'%raw_atom_number
 print 'Magnification: %f'%test_image.magnification
+print 'Sigma: %e'%test_image.s_lambda
 
-test_image.truncate_image(400,1000, 0, 500) #empirical, image-specific
+
 
 
 def gH(omega, omega_resonance, linewidth):
@@ -35,63 +38,65 @@ def gH(omega, omega_resonance, linewidth):
 
 def sigma(intensity_image, omega):
     '''intensity and frequency dependent cross section'''
-    A21 = (G1*4*alpha*((omega)**3)*(D12**2)) / (G2*3*c**2)
+#    A21 = (G1*4*alpha*((omega)**3)*(D12**2)) / (G2*3*c**2)
 #    print 'A21:'
 #    print A21
-    abs_x_section = ((3 * pi**2 * c**2 * A21 * 
-                gH(omega, OMEGA_RES, LINEWIDTH_RES)) 
-                / (OMEGA_RES**2))
-    abs_x_section_0 = ((3 * pi**2 * c**2 * A21 * 
-                gH(OMEGA_RES, OMEGA_RES, LINEWIDTH_RES)) 
-                / (OMEGA_RES**2))
+#    abs_x_section = ((3 * pi**2 * c**2 * A21 * 
+#                gH(omega, OMEGA_RES, LINEWIDTH_RES)) 
+#                / (OMEGA_RES**2))
+#    abs_x_section_0 = ((3 * pi**2 * c**2 * A21 * 
+#                gH(OMEGA_RES, OMEGA_RES, LINEWIDTH_RES)) 
+#                / (OMEGA_RES**2))
 #    print 'lineshape factor:'
 #    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
 #    print 'x_section:'
 #    print abs_x_section
 
-    I_sat = (hbar*OMEGA_RES*A21)/(2*abs_x_section_0)
+#    I_sat = (hbar*OMEGA_RES*A21)/(2*abs_x_section_0)
 #    print "I_sat = %f"%I_sat
-    
-    return abs_x_section / (1 + intensity_image / I_sat)
+    delta = omega - OMEGA_RES
+    return SIGMA_0 / (1 + 4*(delta / LINEWIDTH_RES)**2 + intensity_image / I_SAT)
     
 def sigma_const(beam_intensity, omega):
     '''intensity and frequency dependent cross section'''
-    A21 = (G1*4*alpha*((omega)**3)*(D12**2)) / (G2*3*c**2)
+#    A21 = (G1*4*alpha*((omega)**3)*(D12**2)) / (G2*3*c**2)
 #    print 'A21:'
 #    print A21
-    abs_x_section = ((3 * pi**2 * c**2 * A21 * 
-                gH(omega, OMEGA_RES, LINEWIDTH_RES)) 
-                / (OMEGA_RES**2))
-    abs_x_section_0 = ((3 * pi**2 * c**2 * A21 * 
-                gH(OMEGA_RES, OMEGA_RES, LINEWIDTH_RES)) 
-                / (OMEGA_RES**2))
+#    abs_x_section = ((3 * pi**2 * c**2 * A21 * 
+#                gH(omega, OMEGA_RES, LINEWIDTH_RES)) 
+#                / (OMEGA_RES**2))
+#    abs_x_section_0 = ((3 * pi**2 * c**2 * A21 * 
+#                gH(OMEGA_RES, OMEGA_RES, LINEWIDTH_RES)) 
+#                / (OMEGA_RES**2))
 #    print 'lineshape factor:'
 #    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
 #    print 'x_section:'
 #    print abs_x_section
 
-    I_sat = (hbar*OMEGA_RES*A21)/(2*abs_x_section_0)
+#    I_sat = (hbar*OMEGA_RES*A21)/(2*abs_x_section_0)
 #    print "I_sat = %f"%I_sat
-    
-    return abs_x_section / (1 + beam_intensity / I_sat)
+    delta = omega - OMEGA_RES
+    sigma_const = SIGMA_0 / (1 + 4*(delta/LINEWIDTH_RES)**2 + beam_intensity / I_SAT)
+    print 'sigma_const: %e'%sigma_const
+    return sigma_const
     
 def get_I_sat(omega):
     '''intensity and frequency dependent cross section'''
-    A21 = (G1*4*alpha*((omega)**3)*(D12**2)) / (G2*3*c**2)
-#    print 'A21:'
-#    print A21
-    abs_x_section_0 = ((3 * pi**2 * c**2 * A21 * 
-                gH(OMEGA_RES, OMEGA_RES, LINEWIDTH_RES)) 
-                / (OMEGA_RES**2))
-#    print 'lineshape factor:'
-#    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
-#    print 'x_section:'
-#    print abs_x_section
-
-    I_sat = (hbar*OMEGA_RES*A21)/(2*abs_x_section_0)
+#    A21 = (G1*4*alpha*((omega)**3)*(D12**2)) / (G2*3*c**2)
+##    print 'A21:'
+##    print A21
+#    abs_x_section_0 = ((3 * pi**2 * c**2 * A21 * 
+#                gH(OMEGA_RES, OMEGA_RES, LINEWIDTH_RES)) 
+#                / (OMEGA_RES**2))
+##    print 'lineshape factor:'
+##    print gH(imaging_beam.omega, OMEGA_RES, LINEWIDTH_RES)
+##    print 'x_section:'
+##    print abs_x_section
+#
+#    I_sat = (hbar*OMEGA_RES*A21)/(2*abs_x_section_0)
 #    print "I_sat = %f"%I_sat
     
-    return I_sat
+    return I_SAT
 
 def gaussian1D(x,A,mu,sigma,offset):
     return A*np.exp(-1.*(x-mu)**2./(2.*sigma**2.)) + offset
@@ -167,7 +172,7 @@ print '''
          I_0z:       %e
          w_z (mm):   %2.2f
          power(uW):  %2.2f
-         I/I_sat :   %2.2f\n'''%(I_0z, w_z / mm, power / uW, I_0z / get_I_sat(omega))
+         I/I_sat :   %2.4f\n'''%(I_0z, w_z / mm, power / uW, I_0z / get_I_sat(omega))
          
 #print np.nanmax(intensityImage)
 #print np.nanmax(sum(intensityImage, 0))
@@ -197,15 +202,15 @@ def getAtomNumber_const(image_set, omega):
     return atomNumber
     
 sat_corrected_number = getAtomNumber(test_image, omega)[0][0]
-print sat_corrected_number / raw_atom_number
+print 'intensity correction: %2.5f'%((sat_corrected_number - raw_atom_number)/sat_corrected_number)
 const_sigma_corrected_num = getAtomNumber_const(test_image, omega)[0][0]
 print 'intensity variation correction: %2.5f'%((sat_corrected_number - const_sigma_corrected_num) / sat_corrected_number)
 
+#print SIGMA_0 / (1 + 0.05)
 #for line in test_image.runDataFiles[0,0]:
 #    if line:
 #        print line[0]
 #print test_image.runDataFiles[0,0][10][14][0]
-
 #
 #for file in test_image.runDataFiles[0,0][10]:
 #    if file[0] == u'Variables.m':

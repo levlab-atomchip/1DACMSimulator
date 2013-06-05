@@ -65,7 +65,7 @@ print 'Atom Number Error: %4.1f'%dN
 print "Error Percentage:  %4.1f "%(100*dn / n)
 
 Ntot = 1e5
-dNtot = Ntot * 0.01
+dNtot = Ntot * 0.05
 G = (4 * pi * HBAR**2 * A) / M
 omega_x = 2 * pi * 10 #Hz
 domega_x = omega_x * .01
