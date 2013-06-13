@@ -5,7 +5,7 @@ Created on Sun May 19 15:35:49 2013
 @author: Will
 """
 
-from collections import namedtuple
+#from collections import namedtuple
 import numpy as np
 
 wmin = -50 #um
