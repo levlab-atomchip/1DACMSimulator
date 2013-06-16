@@ -38,3 +38,6 @@ def biot_savart(window, y_0, z_0, current_slab):
         B.set_field(x, [Bx, By, Bz])
     
     return B
+    
+if __name__ == '__main__':
+    import biot_savart_test

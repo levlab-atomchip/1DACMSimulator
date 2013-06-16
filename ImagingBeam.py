@@ -5,7 +5,7 @@ Created on Sun May 19 15:15:38 2013
 @author: Will
 """
 
-from acmconstants import C, G1, ALPHA, SIGMA_0, I_SAT, OMEGA_RES, LINEWIDTH_RES, HBAR
+from acmconstants import C,SIGMA_0, I_SAT, OMEGA_RES, LINEWIDTH_RES
 from math import pi, sqrt, exp
 from Window import window 
 import numpy as np

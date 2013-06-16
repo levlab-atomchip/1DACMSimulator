@@ -21,8 +21,15 @@ class BField():
         self.Bz[nearest_x_ind] = vec[2]
     def plot_mag(self):
         B = np.sqrt(self.Bx**2 + self.By**2 + self.Bz**2)
-        plt.plot(self.window, B)
+        plt.plot(self.window, 1e4*B)
+        plt.xlabel('X')
+        plt.ylabel('Field (G)')
 #        plt.show()
     def get_mag(self):
         B = np.sqrt(self.Bx**2 + self.By**2 + self.Bz**2)
         return B
+    def add_bias(self, bias):
+        for x in xrange(len(self.window)):
+            self.Bx[x] += bias[0]
+            self.By[x] += bias[1]
+            self.Bz[x] += bias[2]

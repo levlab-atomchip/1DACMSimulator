@@ -25,8 +25,8 @@ import AtomDensity
 from AtomImage import DigitalImage, Image
 import matplotlib.pyplot as plt
 from Window import window
-from acmconstants import NUM_PIXELS, OMEGA_RES, C, LINEWIDTH_RES
-from acmconstants import ISAT, SIGMA_0, CLOUD_THICKNESS
+from acmconstants import NUM_PIXELS, OMEGA_RES, C
+from acmconstants import I_SAT, SIGMA_0, CLOUD_THICKNESS
 import numpy as np
 from math import pi
 
@@ -47,7 +47,7 @@ class ACMSimulator:
     def __init__(self):
         self.atom_density = AtomDensity.AtomDensity(atom_tophat, 100e-9)
         self.imaging_beam = ImagingBeam.ImagingBeam((2*pi*C / (OMEGA_RES)), 
-                                                    ISAT*0.1*pi*(500e-6)**2, 
+                                                    I_SAT*0.1*pi*(500e-6)**2, 
                                                     10e6, 
                                                     0, 
                                                     0, 
@@ -64,7 +64,7 @@ class ACMSimulator:
 #                         + self.atom_chip.get_field(self.window))
 #        perturbed_cloud = self.atom_density.mag_potential(perturbed_field)
 #        self.perturbed_cloud = self.atom_density.harmonicBEC(2e3, 10)
-        self.perturbed_cloud = self.atom_density.harmonicThermal(2e3, 100)
+        self.perturbed_cloud = self.atom_density.harmonic_thermal(2e3, 100)
 #        self.perturbed_cloud = self.atom_density
         self.atom_image = self.imaging_beam.image_atoms(self.perturbed_cloud)
         focused_image = self.imaging_system.image(self.atom_image)

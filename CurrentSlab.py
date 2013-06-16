@@ -6,6 +6,8 @@ Created on Fri Jun 07 21:39:55 2013
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
+from math import pi
 
 class Slab():
     def __init__(self, x_l, y_l, th, rez):
@@ -42,3 +44,15 @@ class CurrentSlab():
         return self.dy
     def get_J(self):
         return self.J
+    def plot_J(self):
+        plt.contourf(self.X, self.Y,self.J)
+        plt.colorbar()
+#        scale = 0.1
+#        plt.quiver(self.X, self.Y, scale*self.J*np.cos(self.theta), scale*self.J*np.sin(self.theta))
+        plt.show()
+        plt.contourf(self.X, self.Y, self.theta)
+        plt.colorbar()
+        plt.show()
+    def rotate90(self):
+        self.J = np.rot90(self.J)
+        self.theta = (np.rot90(self.theta) - 0.5*pi) * (self.J > 0)

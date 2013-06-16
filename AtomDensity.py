@@ -22,7 +22,7 @@ class AtomDensity:
     def get_density(self):
         return self.density
         
-    def harmonicBEC(self, omega_perp, omega_long):
+    def harmonic_bec(self, omega_perp, omega_long):
         mu = (G * (15 / pi)**0.4 * (0.5)**(9.0 / 5.0) * (M / G)**0.6 * 
             self.N_total**0.4 * (omega_perp**2 * omega_long)**0.4)
         logging.debug("mu = %s"%mu)
@@ -34,7 +34,7 @@ class AtomDensity:
                                     for x in window.window])
         return AtomDensity(harmonicBEC_density, self.temperature)
         
-    def harmonicThermal(self, omega_perp, omega_long):
+    def harmonic_thermal(self, omega_perp, omega_long):
         w_perp2 = (2 * K_B * self.temperature / (M * omega_perp**2))
         w_long2 = (2 * K_B * self.temperature / (M * omega_long**2))
         n_0 = self.N_total / (pi**1.5 * w_perp2 * w_long2**0.5)
@@ -42,3 +42,15 @@ class AtomDensity:
                                         / window.cell_size**2
                                         for x in window.window])
         return AtomDensity(harmonicThermal_density, self.temperature)
+        
+    def magtrap_approx(self, b_field, omega_perp, omega_long):
+        mu = (G * (15 / pi)**0.4 * (0.5)**(9.0 / 5.0) * (M / G)**0.6 * 
+            self.N_total**0.4 * (omega_perp**2 * omega_long)**0.4)
+        logging.debug("mu = %s"%mu)
+        logging.debug('N = %d'%self.N_total)
+        logging.debug('cell size = %f'%window.cell_size)
+        magtrap_density = np.array([(((mu - b_field.get_mag()) 
+                                    / (HBAR * omega_perp))**2 - 1) 
+                                    / (4 * A * window.cell_size**2) 
+                                    for x in window.window])
+        return AtomDensity(magtrap_density, self.temperature)
