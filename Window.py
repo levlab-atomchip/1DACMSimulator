@@ -23,6 +23,11 @@ wmax = wmax * 1e-6 #m
 
 # window = Window(wmin, wmax, wnum, np.linspace(wmin, wmax, wnum))
 
+class Point():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
 class Window():
    def __init__(self, xmin, xmax, num_cells):
        self.xmin = xmin
@@ -32,3 +37,30 @@ class Window():
        self.cell_size = (self.xmax - self.xmin) / self.num_cells
 	   
 window = Window(wmin, wmax, wnum)
+
+class Window_2D():
+    def __init__(self, x_0, y_0, x_f, y_f, x_num, y_num):
+        self.xmin = x_0
+        self.ymin = y_0
+        self.xmax = x_f
+        self.ymax = y_f
+        self.x_num = x_num
+        self.y_num = y_num
+        self.num_cells = x_num*y_num
+        self.window = np.array([Point(x,y) for x in np.linspace(self.xmin, self.xmax, self.x_num)
+                                  for y in np.linspace(self.ymin, self.ymax, self.y_num)])
+        getxf = lambda pt: pt.x
+        getyf = lambda pt: pt.y
+        getxv = np.vectorize(getxf)
+        getyv = np.vectorize(getyf)
+        self.X = getxv(self.window)
+        self.Y = getyv(self.window)
+        self.window = self.window.reshape((y_num, x_num))
+#        print self.window
+#        print 'window shape'
+#        print self.window.shape
+#        print y_num
+#        print x_num
+        self.X = self.X.reshape((y_num, x_num))
+#        print self.X
+        self.Y = self.Y.reshape((y_num, x_num))

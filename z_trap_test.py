@@ -10,7 +10,7 @@ Only good to 2%!!
 from biot_savart import *
 from CurrentSlab import *
 from math import pi
-from Window import Window
+from Window import Window, Window_2D
 import numpy as np
 from acmconstants import MU_0
 import matplotlib.pyplot as plt
@@ -67,14 +67,17 @@ def z_trap_J_wrap(w, J):
 def z_trap_theta_wrap(w):
     return lambda xx, yy: z_trap_theta(xx, yy, w)
 
-scale = 0.1
-window = Window(-0.5*scale*slab_xl, 0.5*scale*slab_xl, 1000)    
+scale = 1
+#window = Window(-0.5*scale*slab_xl, 0.5*scale*slab_xl, 1000)
+window_2d = Window_2D(-0.5*scale*slab_xl, -0.5*scale*slab_yl, 
+                      0.5*scale*slab_xl, 0.5*scale*slab_yl,
+                      30,30)    
 
 current_slab = CurrentSlab(slab, z_trap_J_wrap(wire_width, wire_J), z_trap_theta_wrap(wire_width))
 current_slab.rotate90()
 
-B = biot_savart(window, y_0, z_0, current_slab)
-B.add_bias([0,trap_bias, 0])
+B = biot_savart_2D(window_2d, z_0, current_slab)
+#B.add_bias([0,trap_bias, 0])
 print 'Bias Field (G): %2.2f'%(1e4*trap_bias)
 
 B.plot_mag()
