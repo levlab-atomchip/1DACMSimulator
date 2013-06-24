@@ -25,14 +25,14 @@ import AtomDensity
 from AtomImage import DigitalImage, Image
 import matplotlib.pyplot as plt
 from Window import window
-from acmconstants import NUM_PIXELS, OMEGA_RES, C
+from acmconstants import NUM_PIXELS, OMEGA_RES, C, M
 from acmconstants import I_SAT, SIGMA_0, CLOUD_THICKNESS
 import numpy as np
 from math import pi
 
 # Some test profiles
-atom_linear = np.array([3e10*i for i in range(len(window.window))])
-atom_tophat = np.array([0.1/window.cell_size**3 
+#atom_linear = np.array([3e10*i for i in range(len(window.window))])
+atom_tophat = np.array([1e-3/window.cell_size**3 
                         for i in range(len(window.window))])
 atom_tophat[0:512] = 1
 atom_tophat[1536:] = 1
@@ -64,8 +64,9 @@ class ACMSimulator:
 #                         + self.atom_chip.get_field(self.window))
 #        perturbed_cloud = self.atom_density.mag_potential(perturbed_field)
 #        self.perturbed_cloud = self.atom_density.harmonicBEC(2e3, 10)
-        self.perturbed_cloud = self.atom_density.harmonic_thermal(2e3, 100)
-#        self.perturbed_cloud = self.atom_density
+        omega_long = 2*pi*1
+        potential = 0.5*M*omega_long**2*window.window**2
+        self.perturbed_cloud = self.atom_density.GPE_soln(potential)
         self.atom_image = self.imaging_beam.image_atoms(self.perturbed_cloud)
         focused_image = self.imaging_system.image(self.atom_image)
         self.digital_image = self.ccd.image(focused_image, 1000e-6)
@@ -114,12 +115,12 @@ class ACMSimulator:
         plt.title('error')
         plt.show()
         
-        
-acmsimulator = ACMSimulator()
-result = acmsimulator.simulate()
-acmsimulator.plot_result()
-acmsimulator.plot_atom_image()
-acmsimulator.plot_atom_density()
-acmsimulator.plot_perturbed_cloud()
-acmsimulator.plot_absorption_image()
-acmsimulator.plot_error()
+if __name__ == "__main__":
+    acmsimulator = ACMSimulator()
+    result = acmsimulator.simulate()
+    acmsimulator.plot_result()
+    acmsimulator.plot_atom_image()
+    acmsimulator.plot_atom_density()
+    acmsimulator.plot_perturbed_cloud()
+    acmsimulator.plot_absorption_image()
+    acmsimulator.plot_error()

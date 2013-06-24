@@ -15,12 +15,12 @@ from AtomChip import *
 hwires = []
 vwires = []
 nwires = []
+#(name, length, width, height, current, xl, y0, z0, subwires = 1):
+hwires.append(HWire('Central Test Wire', 1e-2, 100e-6, 5e-6, 1, 
+                     -0.5e-2, -50e-6, 0))
 
-hwires.append(HThinWire('Central Test Wire', 1, 1e-6, 1e-6, 1, 
-                     -0.5, -0.5e-6, 0))
-
-vwires.append(VThinWire('Arm 1', 0.5, 1e-6, 1e-6, 1, -0.001, -0.5, 0))
-vwires.append(VThinWire('Arm 2', 0.5, 1e-6, 1e-6, 1,  0.001, 0, 0))
+vwires.append(VWire('Arm 1', 0.5e-2, 100e-6, 5e-6, 1, -0.5e-2, -0.5e-2, 0))
+vwires.append(VWire('Arm 2', 0.5e-2, 100e-6, 5e-6, 1,  0.5e-2, 0, 0))
 
 allwires = hwires + vwires + nwires
 

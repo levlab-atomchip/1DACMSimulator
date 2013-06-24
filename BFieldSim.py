@@ -35,7 +35,7 @@ from matplotlib import cm
 from AtomChip import *
 import numpy as np
 import acwires
-import testwires as WireSpecs
+import ThinWireSpecs as WireSpecs
 import matplotlib.pyplot as plt
 from math import pi, sqrt
 
@@ -65,8 +65,8 @@ xplot=0
 #plotbottom = -a
 
 resolution=0.0001 # resolution of the plots, meters
-plotleft=-0.0025 # boundary of plots, meters
-plotright=0.0025
+plotleft=-0.005 # boundary of plots, meters
+plotright=0.005
 plottop = 0.0025
 plotbottom = -0.0025
 
