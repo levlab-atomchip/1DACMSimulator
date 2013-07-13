@@ -20,6 +20,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import pi, sqrt
 from acmconstants import K_B, M
+import logging
+
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 clear = "\n"*100
 
@@ -39,24 +42,28 @@ class BFieldSimulator():
     #    z_range = np.zeros(2,n)
         self.z_range = np.linspace(1e-6,3.5e-3,self.n) #meters
         self.z_spacing = self.z_range[1]-self.z_range[0] #meters
-    def zoom(self, zoom_factor, center_pt = [0, 0]):
-        center_pt = [self.x_trap, self.y_trap]
+    def zoom(self, zoom_factor, center_pt = [0, 0, 200e-6]):
+        center_pt = [self.x_trap, self.y_trap, self.z_trap]
         self.resolution = self.resolution / zoom_factor
         x_cen = center_pt[0]
         y_cen = center_pt[1]
+        z_cen = center_pt[2]
         self.plotleft = x_cen - 0.5*self.nhorz*self.resolution
         self.plotright = x_cen + 0.5*self.nhorz*self.resolution
         self.plottop = y_cen + 0.5*self.nvert*self.resolution
         self.plotbottom = y_cen - 0.5*self.nvert*self.resolution
+        self.plothigh = z_cen + 0.5*self.n*self.resolution
+        self.plotlow = z_cen -0.5*self.n*self.resolution
 
         self.x, self.y =np.meshgrid(
                 np.linspace(self.plotleft, self.plotright, self.nhorz), 
                 np.linspace(self.plotbottom, self.plottop, self.nvert))
+        self.z_range = np.linspace(self.plotlow,self.plothigh,self.n) #meters
+        self.z_spacing = self.resolution #meters
 
     def set_chip(self, chip):
         self.wirespecs = chip['wirespecs']
         #for ii = 1:n
-        self.B_tot_trap = np.array([])
         self.B_ybias = chip['B_ybias']
         self.B_bias = np.array((chip['B_xbias'], chip['B_ybias'], chip['B_zbias']))
         #print B_bias
@@ -78,6 +85,7 @@ class BFieldSimulator():
         self.z_spacing = self.z_range[1]-self.z_range[0] #meters
 
     def calc_trap_height(self):
+        self.B_tot_trap = np.array([])
         for ii in xrange(self.n):
             self.tot_field = np.array((0.0,0.0,0.0))
             for wire in self.wirespecs:
@@ -218,7 +226,38 @@ class BFieldSimulator():
 #            plt.zlabel('B field (G)')
         ax.set_zlabel('B field (G)')
         plt.show()
+    def find_trap_freq(self):
+        self.calc_trap_height()
+        self.calc_xy()
+#            logging.debug('\nxtrap: %e\nytrap: %e'%(self.bfsim.x_trap, self.bfsim.y_trap))
+#            self.bfsim.plot_z()
+#            self.bfsim.plot_xy()
+        sim_results = self.analyze_trap()
+        
+        f_z_trans_diff = abs(sim_results['f_z'] - sim_results['f_trans']) / sim_results['f_z']
+        n_tries = 1
+        while f_z_trans_diff > 0.01 and n_tries < 10:
+            logging.debug('f_z and f_trans differ by: %2.1f %%'%(f_z_trans_diff*100))
+            self.zoom(4)
+            self.calc_trap_height()
+            self.calc_xy()
+            sim_results = self.analyze_trap()
+            last_diff = f_z_trans_diff
+            f_z_trans_diff = abs(sim_results['f_z'] - sim_results['f_trans']) / sim_results['f_z']
+            if abs(last_diff - f_z_trans_diff) < .005:
+                break
+            n_tries += 1
+        logging.debug('f_z and f_trans differ by: %2.1f %%'%(f_z_trans_diff*100))
+        return sim_results
         
 if __name__ == '__main__':
-    import bsimtest
-    bsimtest.unittest.main()
+    import atomchip_v3
+    b_f_sim = BFieldSimulator()
+    b_f_sim.set_chip(atomchip_v3.atomchip_v3)
+    b_f_sim.calc_trap_height()
+    b_f_sim.plot_z()
+    sim_results = b_f_sim.find_trap_freq()
+    print 'x_trap : %2.0f um \ny_trap : %2.0f um \nz_trap : %2.0f um'%(b_f_sim.x_trap*1e6, b_f_sim.y_trap*1e6, b_f_sim.z_trap*1e6)
+    print '\nf_long : %2.0f Hz \nf_trans : %2.0f Hz \nf_z : %2.0f Hz'%(sim_results['f_long'], sim_results['f_trans'], sim_results['f_z'])
+    b_f_sim.set_chip(atomchip_v3.atomchip_v3)
+    b_f_sim.plot_xy()
