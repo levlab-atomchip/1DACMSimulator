@@ -58,6 +58,12 @@ class HThinWire(HWire):
         B_Gz=B_G*(y-self.y0)
         return np.array((0, B_Gy, B_Gz))
         
+class HFlatWire(HWire):
+    def bfieldcalc(self, x, y, z):
+        ''' Calculate field analytically for finite length,
+        finite width, infinitely flat wire'''
+        
+        
                 
 class VWire(Wire):
     def __init__(self, name, length, width, height, current, x0, yd, z0, subwires = 1):

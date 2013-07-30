@@ -9,13 +9,13 @@ from acwires import HWire, VWire, NWire, HThinWire, VThinWire
 
 #from AtomChip import *
 
-I_central = 4
+I_central = 2
 I_GU1 = 0
 I_GU2 = 0
 I_GU3 = 0
 I_GU4 = 0
-I_GU5 = 4
-I_GL1 = 4
+I_GU5 = 2
+I_GL1 = 2
 I_GL2 = 0
 I_GL3 = 0
 I_GL4 = 0
